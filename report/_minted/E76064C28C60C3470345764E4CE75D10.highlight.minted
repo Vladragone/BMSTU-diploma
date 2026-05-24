@@ -1,0 +1,500 @@
+\begin{MintedVerbatim}[commandchars=\\\{\},codes={\catcode`\$=3\catcode`\^=7\catcode`\_=8\relax}]
+\PYG{k}{using}\PYG{+w}{ }\PYG{n+nn}{System.Collections}\PYG{p}{;}
+\PYG{k}{using}\PYG{+w}{ }\PYG{n+nn}{System.Collections.Generic}\PYG{p}{;}
+\PYG{k}{using}\PYG{+w}{ }\PYG{n+nn}{UnityEngine}\PYG{p}{;}
+
+\PYG{k}{public}\PYG{+w}{ }\PYG{k}{class}\PYG{+w}{ }\PYG{n+nc}{EventFsmSyncManager}\PYG{+w}{ }\PYG{p}{:}\PYG{+w}{ }\PYG{n}{MonoBehaviour}
+\PYG{p}{\PYGZob{}}
+\PYG{+w}{    }\PYG{k}{public}\PYG{+w}{ }\PYG{k}{static}\PYG{+w}{ }\PYG{n}{EventFsmSyncManager}\PYG{+w}{ }\PYG{n}{Instance}\PYG{+w}{ }\PYG{p}{\PYGZob{}}\PYG{+w}{ }\PYG{k}{get}\PYG{p}{;}\PYG{+w}{ }\PYG{k}{private}\PYG{+w}{ }\PYG{k}{set}\PYG{p}{;}\PYG{+w}{ }\PYG{p}{\PYGZcb{}}
+
+\PYG{+w}{    }\PYG{n+na}{[Header(\PYGZdq{}Network Role\PYGZdq{})]}
+\PYG{+w}{    }\PYG{k}{public}\PYG{+w}{ }\PYG{n}{NetworkRole}\PYG{+w}{ }\PYG{n}{role}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{NetworkRole}\PYG{p}{.}\PYG{n}{Client}\PYG{p}{;}
+
+\PYG{+w}{    }\PYG{n+na}{[Header(\PYGZdq{}Player Settings\PYGZdq{})]}
+\PYG{+w}{    }\PYG{k}{public}\PYG{+w}{ }\PYG{k+kt}{string}\PYG{+w}{ }\PYG{n}{localPlayerId}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}PlayerA\PYGZdq{}}\PYG{p}{;}
+
+\PYG{+w}{    }\PYG{n+na}{[Header(\PYGZdq{}Reliable UDP Settings\PYGZdq{})]}
+\PYG{+w}{    }\PYG{k}{public}\PYG{+w}{ }\PYG{k+kt}{float}\PYG{+w}{ }\PYG{n}{resendDelay}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+m+mf}{1.5f}\PYG{p}{;}
+
+\PYG{+w}{    }\PYG{n+na}{[Header(\PYGZdq{}Research Mode\PYGZdq{})]}
+\PYG{+w}{    }\PYG{k}{public}\PYG{+w}{ }\PYG{n}{SynchronizationResearchMode}\PYG{+w}{ }\PYG{n}{synchronizationMode}\PYG{+w}{ }\PYG{o}{=}
+\PYG{+w}{        }\PYG{n}{SynchronizationResearchMode}\PYG{p}{.}\PYG{n}{ReliableFsmMethod}\PYG{p}{;}
+
+\PYG{+w}{    }\PYG{k}{private}\PYG{+w}{ }\PYG{k}{readonly}\PYG{+w}{ }\PYG{n}{Dictionary}\PYG{o}{\PYGZlt{}}\PYG{k+kt}{string}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{IFsmPuzzleObject}\PYG{o}{\PYGZgt{}}\PYG{+w}{ }\PYG{n}{registeredObjects}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{k}{new}\PYG{+w}{ }\PYG{n}{Dictionary}\PYG{o}{\PYGZlt{}}\PYG{k+kt}{string}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{IFsmPuzzleObject}\PYG{o}{\PYGZgt{}}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
+\PYG{+w}{    }\PYG{k}{private}\PYG{+w}{ }\PYG{k}{readonly}\PYG{+w}{ }\PYG{n}{HashSet}\PYG{o}{\PYGZlt{}}\PYG{k+kt}{string}\PYG{o}{\PYGZgt{}}\PYG{+w}{ }\PYG{n}{appliedEventKeys}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{k}{new}\PYG{+w}{ }\PYG{n}{HashSet}\PYG{o}{\PYGZlt{}}\PYG{k+kt}{string}\PYG{o}{\PYGZgt{}}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
+\PYG{+w}{    }\PYG{k}{private}\PYG{+w}{ }\PYG{k}{readonly}\PYG{+w}{ }\PYG{n}{Dictionary}\PYG{o}{\PYGZlt{}}\PYG{k+kt}{int}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{PuzzleEvent}\PYG{o}{\PYGZgt{}}\PYG{+w}{ }\PYG{n}{pendingEvents}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{k}{new}\PYG{+w}{ }\PYG{n}{Dictionary}\PYG{o}{\PYGZlt{}}\PYG{k+kt}{int}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{PuzzleEvent}\PYG{o}{\PYGZgt{}}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
+\PYG{+w}{    }\PYG{k}{private}\PYG{+w}{ }\PYG{k}{readonly}\PYG{+w}{ }\PYG{n}{Dictionary}\PYG{o}{\PYGZlt{}}\PYG{k+kt}{string}\PYG{p}{,}\PYG{+w}{ }\PYG{k+kt}{int}\PYG{o}{\PYGZgt{}}\PYG{+w}{ }\PYG{n}{expectedSequenceByPlayer}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{k}{new}\PYG{+w}{ }\PYG{n}{Dictionary}\PYG{o}{\PYGZlt{}}\PYG{k+kt}{string}\PYG{p}{,}\PYG{+w}{ }\PYG{k+kt}{int}\PYG{o}{\PYGZgt{}}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
+
+\PYG{+w}{    }\PYG{k}{private}\PYG{+w}{ }\PYG{k+kt}{int}\PYG{+w}{ }\PYG{n}{nextEventId}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+m+mi}{1}\PYG{p}{;}
+\PYG{+w}{    }\PYG{k}{private}\PYG{+w}{ }\PYG{k+kt}{int}\PYG{+w}{ }\PYG{n}{nextSequenceNumber}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+m+mi}{1}\PYG{p}{;}
+
+\PYG{+w}{    }\PYG{k}{private}\PYG{+w}{ }\PYG{k+kt}{bool}\PYG{+w}{ }\PYG{n}{UseReliableMethod}
+\PYG{+w}{    }\PYG{p}{\PYGZob{}}
+\PYG{+w}{        }\PYG{k}{get}
+\PYG{+w}{        }\PYG{p}{\PYGZob{}}
+\PYG{+w}{            }\PYG{k}{return}\PYG{+w}{ }\PYG{n}{synchronizationMode}\PYG{+w}{ }\PYG{o}{==}\PYG{+w}{ }\PYG{n}{SynchronizationResearchMode}\PYG{p}{.}\PYG{n}{ReliableFsmMethod}\PYG{p}{;}
+\PYG{+w}{        }\PYG{p}{\PYGZcb{}}
+\PYG{+w}{    }\PYG{p}{\PYGZcb{}}
+
+\PYG{+w}{    }\PYG{k}{private}\PYG{+w}{ }\PYG{k}{void}\PYG{+w}{ }\PYG{n+nf}{Awake}\PYG{p}{(}\PYG{p}{)}
+\PYG{+w}{    }\PYG{p}{\PYGZob{}}
+\PYG{+w}{        }\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{Instance}\PYG{+w}{ }\PYG{o}{!=}\PYG{+w}{ }\PYG{k}{null}\PYG{+w}{ }\PYG{o}{\PYGZam{}\PYGZam{}}\PYG{+w}{ }\PYG{n}{Instance}\PYG{+w}{ }\PYG{o}{!=}\PYG{+w}{ }\PYG{k}{this}\PYG{p}{)}
+\PYG{+w}{        }\PYG{p}{\PYGZob{}}
+\PYG{+w}{            }\PYG{n}{Destroy}\PYG{p}{(}\PYG{n}{gameObject}\PYG{p}{)}\PYG{p}{;}
+\PYG{+w}{            }\PYG{k}{return}\PYG{p}{;}
+\PYG{+w}{        }\PYG{p}{\PYGZcb{}}
+
+\PYG{+w}{        }\PYG{n}{Instance}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{k}{this}\PYG{p}{;}
+
+\PYG{+w}{        }\PYG{n}{ApplyCommandLineModeOverride}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
+\PYG{+w}{    }\PYG{p}{\PYGZcb{}}
+
+\PYG{+w}{    }\PYG{k}{private}\PYG{+w}{ }\PYG{k}{void}\PYG{+w}{ }\PYG{n+nf}{ApplyCommandLineModeOverride}\PYG{p}{(}\PYG{p}{)}
+\PYG{+w}{    }\PYG{p}{\PYGZob{}}
+\PYG{+w}{        }\PYG{k+kt}{string}\PYG{p}{[}\PYG{p}{]}\PYG{+w}{ }\PYG{n}{args}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{System}\PYG{p}{.}\PYG{n}{Environment}\PYG{p}{.}\PYG{n}{GetCommandLineArgs}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
+
+\PYG{+w}{        }\PYG{k}{foreach}\PYG{+w}{ }\PYG{p}{(}\PYG{k+kt}{string}\PYG{+w}{ }\PYG{n}{arg}\PYG{+w}{ }\PYG{k}{in}\PYG{+w}{ }\PYG{n}{args}\PYG{p}{)}
+\PYG{+w}{        }\PYG{p}{\PYGZob{}}
+\PYG{+w}{            }\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{arg}\PYG{+w}{ }\PYG{o}{==}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}\PYGZhy{}basicSync\PYGZdq{}}\PYG{p}{)}
+\PYG{+w}{            }\PYG{p}{\PYGZob{}}
+\PYG{+w}{                }\PYG{n}{synchronizationMode}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{SynchronizationResearchMode}\PYG{p}{.}\PYG{n}{BasicUdpEvents}\PYG{p}{;}
+\PYG{+w}{            }\PYG{p}{\PYGZcb{}}
+\PYG{+w}{            }\PYG{k}{else}\PYG{+w}{ }\PYG{n+nf}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{arg}\PYG{+w}{ }\PYG{o}{==}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}\PYGZhy{}reliableSync\PYGZdq{}}\PYG{p}{)}
+\PYG{+w}{            }\PYG{p}{\PYGZob{}}
+\PYG{+w}{                }\PYG{n}{synchronizationMode}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{SynchronizationResearchMode}\PYG{p}{.}\PYG{n}{ReliableFsmMethod}\PYG{p}{;}
+\PYG{+w}{            }\PYG{p}{\PYGZcb{}}
+\PYG{+w}{        }\PYG{p}{\PYGZcb{}}
+
+\PYG{+w}{        }\PYG{n}{Debug}\PYG{p}{.}\PYG{n}{Log}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}[EventFsmSyncManager] Synchronization research mode: \PYGZdq{}}\PYG{+w}{ }\PYG{o}{+}\PYG{+w}{ }\PYG{n}{synchronizationMode}\PYG{p}{)}\PYG{p}{;}
+\PYG{+w}{    }\PYG{p}{\PYGZcb{}}
+
+\PYG{+w}{    }\PYG{k}{private}\PYG{+w}{ }\PYG{k+kt}{string}\PYG{+w}{ }\PYG{n+nf}{GetEventKey}\PYG{p}{(}\PYG{n}{PuzzleEvent}\PYG{+w}{ }\PYG{n}{puzzleEvent}\PYG{p}{)}
+\PYG{+w}{    }\PYG{p}{\PYGZob{}}
+\PYG{+w}{        }\PYG{k}{return}\PYG{+w}{ }\PYG{n}{puzzleEvent}\PYG{p}{.}\PYG{n}{sourcePlayerId}\PYG{+w}{ }\PYG{o}{+}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}:\PYGZdq{}}\PYG{+w}{ }\PYG{o}{+}\PYG{+w}{ }\PYG{n}{puzzleEvent}\PYG{p}{.}\PYG{n}{eventId}\PYG{p}{;}
+\PYG{+w}{    }\PYG{p}{\PYGZcb{}}
+
+\PYG{+w}{    }\PYG{k}{public}\PYG{+w}{ }\PYG{k}{void}\PYG{+w}{ }\PYG{n+nf}{RegisterObject}\PYG{p}{(}\PYG{n}{IFsmPuzzleObject}\PYG{+w}{ }\PYG{n}{puzzleObject}\PYG{p}{)}
+\PYG{+w}{    }\PYG{p}{\PYGZob{}}
+\PYG{+w}{        }\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{puzzleObject}\PYG{+w}{ }\PYG{o}{==}\PYG{+w}{ }\PYG{k}{null}\PYG{p}{)}
+\PYG{+w}{            }\PYG{k}{return}\PYG{p}{;}
+
+\PYG{+w}{        }\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{k+kt}{string}\PYG{p}{.}\PYG{n}{IsNullOrWhiteSpace}\PYG{p}{(}\PYG{n}{puzzleObject}\PYG{p}{.}\PYG{n}{ObjectId}\PYG{p}{)}\PYG{p}{)}
+\PYG{+w}{            }\PYG{k}{return}\PYG{p}{;}
+
+\PYG{+w}{        }\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{registeredObjects}\PYG{p}{.}\PYG{n}{ContainsKey}\PYG{p}{(}\PYG{n}{puzzleObject}\PYG{p}{.}\PYG{n}{ObjectId}\PYG{p}{)}\PYG{p}{)}
+\PYG{+w}{            }\PYG{k}{return}\PYG{p}{;}
+
+\PYG{+w}{        }\PYG{n}{registeredObjects}\PYG{p}{.}\PYG{n}{Add}\PYG{p}{(}\PYG{n}{puzzleObject}\PYG{p}{.}\PYG{n}{ObjectId}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{puzzleObject}\PYG{p}{)}\PYG{p}{;}
+
+\PYG{+w}{        }\PYG{n}{Debug}\PYG{p}{.}\PYG{n}{Log}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}[EventFsmSyncManager] Зарегистрирован FSM\PYGZhy{}объект: \PYGZdq{}}\PYG{+w}{ }\PYG{o}{+}\PYG{+w}{ }\PYG{n}{puzzleObject}\PYG{p}{.}\PYG{n}{ObjectId}\PYG{p}{)}\PYG{p}{;}
+\PYG{+w}{    }\PYG{p}{\PYGZcb{}}
+
+\PYG{+w}{    }\PYG{k}{public}\PYG{+w}{ }\PYG{k}{void}\PYG{+w}{ }\PYG{n+nf}{CreateAndSendEvent}\PYG{p}{(}\PYG{k+kt}{string}\PYG{+w}{ }\PYG{n}{sourceObjectId}\PYG{p}{,}\PYG{+w}{ }\PYG{k+kt}{string}\PYG{+w}{ }\PYG{n}{targetObjectId}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{PuzzleEventType}\PYG{+w}{ }\PYG{n}{eventType}\PYG{p}{)}
+\PYG{+w}{    }\PYG{p}{\PYGZob{}}
+\PYG{+w}{        }\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{role}\PYG{+w}{ }\PYG{o}{!=}\PYG{+w}{ }\PYG{n}{NetworkRole}\PYG{p}{.}\PYG{n}{Client}\PYG{p}{)}
+\PYG{+w}{        }\PYG{p}{\PYGZob{}}
+\PYG{+w}{            }\PYG{n}{Debug}\PYG{p}{.}\PYG{n}{LogWarning}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}[EventFsmSyncManager] Игровые события должен создавать клиент. Текущая роль: \PYGZdq{}}\PYG{+w}{ }\PYG{o}{+}\PYG{+w}{ }\PYG{n}{role}\PYG{p}{)}\PYG{p}{;}
+\PYG{+w}{            }\PYG{k}{return}\PYG{p}{;}
+\PYG{+w}{        }\PYG{p}{\PYGZcb{}}
+
+\PYG{+w}{        }\PYG{n}{PuzzleEvent}\PYG{+w}{ }\PYG{n}{puzzleEvent}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{k}{new}\PYG{+w}{ }\PYG{n}{PuzzleEvent}\PYG{p}{(}
+\PYG{+w}{            }\PYG{n}{nextEventId}\PYG{o}{++}\PYG{p}{,}
+\PYG{+w}{            }\PYG{n}{nextSequenceNumber}\PYG{o}{++}\PYG{p}{,}
+\PYG{+w}{            }\PYG{n}{localPlayerId}\PYG{p}{,}
+\PYG{+w}{            }\PYG{n}{sourceObjectId}\PYG{p}{,}
+\PYG{+w}{            }\PYG{n}{targetObjectId}\PYG{p}{,}
+\PYG{+w}{            }\PYG{n}{eventType}
+\PYG{+w}{        }\PYG{p}{)}\PYG{p}{;}
+
+\PYG{+w}{        }\PYG{n}{Debug}\PYG{p}{.}\PYG{n}{Log}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}[CLIENT \PYGZdq{}}\PYG{+w}{ }\PYG{o}{+}\PYG{+w}{ }\PYG{n}{localPlayerId}\PYG{+w}{ }\PYG{o}{+}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}] Создано событие: \PYGZdq{}}\PYG{+w}{ }\PYG{o}{+}
+\PYG{+w}{                  }\PYG{n}{puzzleEvent}\PYG{p}{.}\PYG{n}{eventType}\PYG{+w}{ }\PYG{o}{+}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{} | ID=\PYGZdq{}}\PYG{+w}{ }\PYG{o}{+}\PYG{+w}{ }\PYG{n}{puzzleEvent}\PYG{p}{.}\PYG{n}{eventId}\PYG{+w}{ }\PYG{o}{+}
+\PYG{+w}{                  }\PYG{l+s}{\PYGZdq{} | Seq=\PYGZdq{}}\PYG{+w}{ }\PYG{o}{+}\PYG{+w}{ }\PYG{n}{puzzleEvent}\PYG{p}{.}\PYG{n}{sequenceNumber}\PYG{p}{)}\PYG{p}{;}
+
+\PYG{+w}{        }\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{ResearchMetrics}\PYG{p}{.}\PYG{n}{Instance}\PYG{+w}{ }\PYG{o}{!=}\PYG{+w}{ }\PYG{k}{null}\PYG{p}{)}
+\PYG{+w}{        }\PYG{p}{\PYGZob{}}
+\PYG{+w}{            }\PYG{n}{ResearchMetrics}\PYG{p}{.}\PYG{n}{Instance}\PYG{p}{.}\PYG{n}{RegisterCreatedEvent}\PYG{p}{(}\PYG{n}{puzzleEvent}\PYG{p}{.}\PYG{n}{eventId}\PYG{p}{)}\PYG{p}{;}
+\PYG{+w}{        }\PYG{p}{\PYGZcb{}}
+
+\PYG{+w}{        }\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{UseReliableMethod}\PYG{p}{)}
+\PYG{+w}{        }\PYG{p}{\PYGZob{}}
+\PYG{+w}{            }\PYG{n}{pendingEvents}\PYG{p}{[}\PYG{n}{puzzleEvent}\PYG{p}{.}\PYG{n}{eventId}\PYG{p}{]}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{puzzleEvent}\PYG{p}{;}
+\PYG{+w}{        }\PYG{p}{\PYGZcb{}}
+
+\PYG{+w}{        }\PYG{n}{SendPuzzleEventMessage}\PYG{p}{(}\PYG{n}{puzzleEvent}\PYG{p}{)}\PYG{p}{;}
+
+\PYG{+w}{        }\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{UseReliableMethod}\PYG{p}{)}
+\PYG{+w}{        }\PYG{p}{\PYGZob{}}
+\PYG{+w}{            }\PYG{n}{StartCoroutine}\PYG{p}{(}\PYG{n}{ResendUntilAcknowledged}\PYG{p}{(}\PYG{n}{puzzleEvent}\PYG{p}{.}\PYG{n}{eventId}\PYG{p}{)}\PYG{p}{)}\PYG{p}{;}
+\PYG{+w}{        }\PYG{p}{\PYGZcb{}}
+\PYG{+w}{    }\PYG{p}{\PYGZcb{}}
+
+\PYG{+w}{    }\PYG{k}{private}\PYG{+w}{ }\PYG{n}{IEnumerator}\PYG{+w}{ }\PYG{n+nf}{ResendUntilAcknowledged}\PYG{p}{(}\PYG{k+kt}{int}\PYG{+w}{ }\PYG{n}{eventId}\PYG{p}{)}
+\PYG{+w}{    }\PYG{p}{\PYGZob{}}
+\PYG{+w}{        }\PYG{k}{while}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{pendingEvents}\PYG{p}{.}\PYG{n}{ContainsKey}\PYG{p}{(}\PYG{n}{eventId}\PYG{p}{)}\PYG{p}{)}
+\PYG{+w}{        }\PYG{p}{\PYGZob{}}
+\PYG{+w}{            }\PYG{k}{yield}\PYG{+w}{ }\PYG{k}{return}\PYG{+w}{ }\PYG{k}{new}\PYG{+w}{ }\PYG{n+nf}{WaitForSeconds}\PYG{p}{(}\PYG{n}{resendDelay}\PYG{p}{)}\PYG{p}{;}
+
+\PYG{+w}{            }\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{o}{!}\PYG{n}{pendingEvents}\PYG{p}{.}\PYG{n}{ContainsKey}\PYG{p}{(}\PYG{n}{eventId}\PYG{p}{)}\PYG{p}{)}
+\PYG{+w}{                }\PYG{k}{yield}\PYG{+w}{ }\PYG{k}{break}\PYG{p}{;}
+
+\PYG{+w}{            }\PYG{n}{Debug}\PYG{p}{.}\PYG{n}{LogWarning}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}[CLIENT \PYGZdq{}}\PYG{+w}{ }\PYG{o}{+}\PYG{+w}{ }\PYG{n}{localPlayerId}\PYG{+w}{ }\PYG{o}{+}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}] ACK не получен. Повторная отправка события ID=\PYGZdq{}}\PYG{+w}{ }\PYG{o}{+}\PYG{+w}{ }\PYG{n}{eventId}\PYG{p}{)}\PYG{p}{;}
+
+\PYG{+w}{            }\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{ResearchMetrics}\PYG{p}{.}\PYG{n}{Instance}\PYG{+w}{ }\PYG{o}{!=}\PYG{+w}{ }\PYG{k}{null}\PYG{p}{)}
+\PYG{+w}{            }\PYG{p}{\PYGZob{}}
+\PYG{+w}{                }\PYG{n}{ResearchMetrics}\PYG{p}{.}\PYG{n}{Instance}\PYG{p}{.}\PYG{n}{RegisterResend}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
+\PYG{+w}{            }\PYG{p}{\PYGZcb{}}
+
+\PYG{+w}{            }\PYG{n}{SendPuzzleEventMessage}\PYG{p}{(}\PYG{n}{pendingEvents}\PYG{p}{[}\PYG{n}{eventId}\PYG{p}{]}\PYG{p}{)}\PYG{p}{;}
+\PYG{+w}{        }\PYG{p}{\PYGZcb{}}
+\PYG{+w}{    }\PYG{p}{\PYGZcb{}}
+
+\PYG{+w}{    }\PYG{k}{public}\PYG{+w}{ }\PYG{k}{void}\PYG{+w}{ }\PYG{n+nf}{OnNetworkMessageReceived}\PYG{p}{(}\PYG{n}{NetworkMessage}\PYG{+w}{ }\PYG{n}{message}\PYG{p}{)}
+\PYG{+w}{    }\PYG{p}{\PYGZob{}}
+\PYG{+w}{        }\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{message}\PYG{+w}{ }\PYG{o}{==}\PYG{+w}{ }\PYG{k}{null}\PYG{p}{)}
+\PYG{+w}{        }\PYG{p}{\PYGZob{}}
+\PYG{+w}{            }\PYG{n}{Debug}\PYG{p}{.}\PYG{n}{LogError}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}[EventFsmSyncManager] Получено пустое сетевое сообщение\PYGZdq{}}\PYG{p}{)}\PYG{p}{;}
+\PYG{+w}{            }\PYG{k}{return}\PYG{p}{;}
+\PYG{+w}{        }\PYG{p}{\PYGZcb{}}
+
+\PYG{+w}{        }\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{message}\PYG{p}{.}\PYG{n}{messageType}\PYG{+w}{ }\PYG{o}{==}\PYG{+w}{ }\PYG{n}{NetworkMessageType}\PYG{p}{.}\PYG{n}{ClientHello}\PYG{p}{)}
+\PYG{+w}{        }\PYG{p}{\PYGZob{}}
+\PYG{+w}{            }\PYG{n}{Debug}\PYG{p}{.}\PYG{n}{Log}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}[EventFsmSyncManager] Получен ClientHello от \PYGZdq{}}\PYG{+w}{ }\PYG{o}{+}\PYG{+w}{ }\PYG{n}{message}\PYG{p}{.}\PYG{n}{senderPlayerId}\PYG{p}{)}\PYG{p}{;}
+\PYG{+w}{            }\PYG{k}{return}\PYG{p}{;}
+\PYG{+w}{        }\PYG{p}{\PYGZcb{}}
+
+\PYG{+w}{        }\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{message}\PYG{p}{.}\PYG{n}{messageType}\PYG{+w}{ }\PYG{o}{==}\PYG{+w}{ }\PYG{n}{NetworkMessageType}\PYG{p}{.}\PYG{n}{Acknowledgement}\PYG{p}{)}
+\PYG{+w}{        }\PYG{p}{\PYGZob{}}
+\PYG{+w}{            }\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{o}{!}\PYG{n}{UseReliableMethod}\PYG{p}{)}
+\PYG{+w}{                }\PYG{k}{return}\PYG{p}{;}
+
+\PYG{+w}{            }\PYG{n}{HandleAcknowledgement}\PYG{p}{(}\PYG{n}{message}\PYG{p}{)}\PYG{p}{;}
+\PYG{+w}{            }\PYG{k}{return}\PYG{p}{;}
+\PYG{+w}{        }\PYG{p}{\PYGZcb{}}
+
+\PYG{+w}{        }\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{message}\PYG{p}{.}\PYG{n}{messageType}\PYG{+w}{ }\PYG{o}{==}\PYG{+w}{ }\PYG{n}{NetworkMessageType}\PYG{p}{.}\PYG{n}{PuzzleEvent}\PYG{p}{)}
+\PYG{+w}{        }\PYG{p}{\PYGZob{}}
+\PYG{+w}{            }\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{message}\PYG{p}{.}\PYG{n}{puzzleEvent}\PYG{+w}{ }\PYG{o}{==}\PYG{+w}{ }\PYG{k}{null}\PYG{p}{)}
+\PYG{+w}{            }\PYG{p}{\PYGZob{}}
+\PYG{+w}{                }\PYG{n}{Debug}\PYG{p}{.}\PYG{n}{LogError}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}[EventFsmSyncManager] Получен PuzzleEvent, но он пустой\PYGZdq{}}\PYG{p}{)}\PYG{p}{;}
+\PYG{+w}{                }\PYG{k}{return}\PYG{p}{;}
+\PYG{+w}{            }\PYG{p}{\PYGZcb{}}
+
+\PYG{+w}{            }\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{role}\PYG{+w}{ }\PYG{o}{==}\PYG{+w}{ }\PYG{n}{NetworkRole}\PYG{p}{.}\PYG{n}{Server}\PYG{p}{)}
+\PYG{+w}{            }\PYG{p}{\PYGZob{}}
+\PYG{+w}{                }\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{UseReliableMethod}\PYG{p}{)}
+\PYG{+w}{                }\PYG{p}{\PYGZob{}}
+\PYG{+w}{                    }\PYG{n}{HandlePuzzleEventOnServer}\PYG{p}{(}\PYG{n}{message}\PYG{p}{.}\PYG{n}{puzzleEvent}\PYG{p}{)}\PYG{p}{;}
+\PYG{+w}{                }\PYG{p}{\PYGZcb{}}
+\PYG{+w}{                }\PYG{k}{else}
+\PYG{+w}{                }\PYG{p}{\PYGZob{}}
+\PYG{+w}{                    }\PYG{n}{HandleBasicPuzzleEventOnServer}\PYG{p}{(}\PYG{n}{message}\PYG{p}{.}\PYG{n}{puzzleEvent}\PYG{p}{)}\PYG{p}{;}
+\PYG{+w}{                }\PYG{p}{\PYGZcb{}}
+\PYG{+w}{            }\PYG{p}{\PYGZcb{}}
+\PYG{+w}{            }\PYG{k}{else}
+\PYG{+w}{            }\PYG{p}{\PYGZob{}}
+\PYG{+w}{                }\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{UseReliableMethod}\PYG{p}{)}
+\PYG{+w}{                }\PYG{p}{\PYGZob{}}
+\PYG{+w}{                    }\PYG{n}{HandleApprovedPuzzleEventOnClient}\PYG{p}{(}\PYG{n}{message}\PYG{p}{.}\PYG{n}{puzzleEvent}\PYG{p}{)}\PYG{p}{;}
+\PYG{+w}{                }\PYG{p}{\PYGZcb{}}
+\PYG{+w}{                }\PYG{k}{else}
+\PYG{+w}{                }\PYG{p}{\PYGZob{}}
+\PYG{+w}{                    }\PYG{n}{HandleBasicPuzzleEventOnClient}\PYG{p}{(}\PYG{n}{message}\PYG{p}{.}\PYG{n}{puzzleEvent}\PYG{p}{)}\PYG{p}{;}
+\PYG{+w}{                }\PYG{p}{\PYGZcb{}}
+\PYG{+w}{            }\PYG{p}{\PYGZcb{}}
+
+\PYG{+w}{            }\PYG{k}{return}\PYG{p}{;}
+\PYG{+w}{        }\PYG{p}{\PYGZcb{}}
+
+\PYG{+w}{        }\PYG{n}{Debug}\PYG{p}{.}\PYG{n}{LogWarning}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}[EventFsmSyncManager] Неизвестный тип сообщения: \PYGZdq{}}\PYG{+w}{ }\PYG{o}{+}\PYG{+w}{ }\PYG{n}{message}\PYG{p}{.}\PYG{n}{messageType}\PYG{p}{)}\PYG{p}{;}
+\PYG{+w}{    }\PYG{p}{\PYGZcb{}}
+
+\PYG{+w}{    }\PYG{k}{private}\PYG{+w}{ }\PYG{k}{void}\PYG{+w}{ }\PYG{n+nf}{HandleAcknowledgement}\PYG{p}{(}\PYG{n}{NetworkMessage}\PYG{+w}{ }\PYG{n}{message}\PYG{p}{)}
+\PYG{+w}{    }\PYG{p}{\PYGZob{}}
+\PYG{+w}{        }\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{role}\PYG{+w}{ }\PYG{o}{!=}\PYG{+w}{ }\PYG{n}{NetworkRole}\PYG{p}{.}\PYG{n}{Client}\PYG{p}{)}
+\PYG{+w}{            }\PYG{k}{return}\PYG{p}{;}
+
+\PYG{+w}{        }\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{message}\PYG{p}{.}\PYG{n}{targetPlayerId}\PYG{+w}{ }\PYG{o}{!=}\PYG{+w}{ }\PYG{n}{localPlayerId}\PYG{p}{)}
+\PYG{+w}{            }\PYG{k}{return}\PYG{p}{;}
+
+\PYG{+w}{        }\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{pendingEvents}\PYG{p}{.}\PYG{n}{TryGetValue}\PYG{p}{(}\PYG{n}{message}\PYG{p}{.}\PYG{n}{ackForEventId}\PYG{p}{,}\PYG{+w}{ }\PYG{k}{out}\PYG{+w}{ }\PYG{n}{PuzzleEvent}\PYG{+w}{ }\PYG{n}{acknowledgedEvent}\PYG{p}{)}\PYG{p}{)}
+\PYG{+w}{        }\PYG{p}{\PYGZob{}}
+\PYG{+w}{            }\PYG{n}{pendingEvents}\PYG{p}{.}\PYG{n}{Remove}\PYG{p}{(}\PYG{n}{message}\PYG{p}{.}\PYG{n}{ackForEventId}\PYG{p}{)}\PYG{p}{;}
+
+\PYG{+w}{            }\PYG{n}{Debug}\PYG{p}{.}\PYG{n}{Log}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}[CLIENT \PYGZdq{}}\PYG{+w}{ }\PYG{o}{+}\PYG{+w}{ }\PYG{n}{localPlayerId}\PYG{+w}{ }\PYG{o}{+}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}] Получен ACK. Событие удалено из очереди ожидания: \PYGZdq{}}\PYG{+w}{ }\PYG{o}{+}\PYG{+w}{ }\PYG{n}{message}\PYG{p}{.}\PYG{n}{ackForEventId}\PYG{p}{)}\PYG{p}{;}
+
+\PYG{+w}{            }\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{ResearchMetrics}\PYG{p}{.}\PYG{n}{Instance}\PYG{+w}{ }\PYG{o}{!=}\PYG{+w}{ }\PYG{k}{null}\PYG{p}{)}
+\PYG{+w}{            }\PYG{p}{\PYGZob{}}
+\PYG{+w}{                }\PYG{n}{ResearchMetrics}\PYG{p}{.}\PYG{n}{Instance}\PYG{p}{.}\PYG{n}{RegisterAck}\PYG{p}{(}\PYG{n}{message}\PYG{p}{.}\PYG{n}{ackForEventId}\PYG{p}{)}\PYG{p}{;}
+\PYG{+w}{            }\PYG{p}{\PYGZcb{}}
+
+\PYG{+w}{            }\PYG{k+kt}{string}\PYG{+w}{ }\PYG{n}{eventKey}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{GetEventKey}\PYG{p}{(}\PYG{n}{acknowledgedEvent}\PYG{p}{)}\PYG{p}{;}
+
+\PYG{+w}{            }\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{o}{!}\PYG{n}{appliedEventKeys}\PYG{p}{.}\PYG{n}{Contains}\PYG{p}{(}\PYG{n}{eventKey}\PYG{p}{)}\PYG{p}{)}
+\PYG{+w}{            }\PYG{p}{\PYGZob{}}
+\PYG{+w}{                }\PYG{k+kt}{bool}\PYG{+w}{ }\PYG{n}{success}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{ApplyEventToFsm}\PYG{p}{(}\PYG{n}{acknowledgedEvent}\PYG{p}{)}\PYG{p}{;}
+
+\PYG{+w}{                }\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{success}\PYG{p}{)}
+\PYG{+w}{                }\PYG{p}{\PYGZob{}}
+\PYG{+w}{                    }\PYG{n}{appliedEventKeys}\PYG{p}{.}\PYG{n}{Add}\PYG{p}{(}\PYG{n}{eventKey}\PYG{p}{)}\PYG{p}{;}
+
+\PYG{+w}{                    }\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{ResearchMetrics}\PYG{p}{.}\PYG{n}{Instance}\PYG{+w}{ }\PYG{o}{!=}\PYG{+w}{ }\PYG{k}{null}\PYG{p}{)}
+\PYG{+w}{                    }\PYG{p}{\PYGZob{}}
+\PYG{+w}{                        }\PYG{n}{ResearchMetrics}\PYG{p}{.}\PYG{n}{Instance}\PYG{p}{.}\PYG{n}{RegisterAppliedEvent}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
+\PYG{+w}{                    }\PYG{p}{\PYGZcb{}}
+
+\PYG{+w}{                    }\PYG{n}{Debug}\PYG{p}{.}\PYG{n}{Log}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}[CLIENT \PYGZdq{}}\PYG{+w}{ }\PYG{o}{+}\PYG{+w}{ }\PYG{n}{localPlayerId}\PYG{+w}{ }\PYG{o}{+}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}] Собственное событие применено по ACK: \PYGZdq{}}\PYG{+w}{ }\PYG{o}{+}\PYG{+w}{ }\PYG{n}{eventKey}\PYG{p}{)}\PYG{p}{;}
+\PYG{+w}{                }\PYG{p}{\PYGZcb{}}
+\PYG{+w}{                }\PYG{k}{else}
+\PYG{+w}{                }\PYG{p}{\PYGZob{}}
+\PYG{+w}{                    }\PYG{n}{Debug}\PYG{p}{.}\PYG{n}{LogWarning}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}[CLIENT \PYGZdq{}}\PYG{+w}{ }\PYG{o}{+}\PYG{+w}{ }\PYG{n}{localPlayerId}\PYG{+w}{ }\PYG{o}{+}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}] ACK получен, но собственное событие не применено локально: \PYGZdq{}}\PYG{+w}{ }\PYG{o}{+}\PYG{+w}{ }\PYG{n}{eventKey}\PYG{p}{)}\PYG{p}{;}
+\PYG{+w}{                }\PYG{p}{\PYGZcb{}}
+\PYG{+w}{            }\PYG{p}{\PYGZcb{}}
+\PYG{+w}{        }\PYG{p}{\PYGZcb{}}
+\PYG{+w}{        }\PYG{k}{else}
+\PYG{+w}{        }\PYG{p}{\PYGZob{}}
+\PYG{+w}{            }\PYG{n}{Debug}\PYG{p}{.}\PYG{n}{LogWarning}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}[CLIENT \PYGZdq{}}\PYG{+w}{ }\PYG{o}{+}\PYG{+w}{ }\PYG{n}{localPlayerId}\PYG{+w}{ }\PYG{o}{+}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}] ACK получен, но событие уже не ожидалось: \PYGZdq{}}\PYG{+w}{ }\PYG{o}{+}\PYG{+w}{ }\PYG{n}{message}\PYG{p}{.}\PYG{n}{ackForEventId}\PYG{p}{)}\PYG{p}{;}
+\PYG{+w}{        }\PYG{p}{\PYGZcb{}}
+\PYG{+w}{    }\PYG{p}{\PYGZcb{}}
+
+\PYG{+w}{    }\PYG{k}{private}\PYG{+w}{ }\PYG{k}{void}\PYG{+w}{ }\PYG{n+nf}{HandlePuzzleEventOnServer}\PYG{p}{(}\PYG{n}{PuzzleEvent}\PYG{+w}{ }\PYG{n}{puzzleEvent}\PYG{p}{)}
+\PYG{+w}{    }\PYG{p}{\PYGZob{}}
+\PYG{+w}{        }\PYG{k+kt}{string}\PYG{+w}{ }\PYG{n}{eventKey}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{GetEventKey}\PYG{p}{(}\PYG{n}{puzzleEvent}\PYG{p}{)}\PYG{p}{;}
+
+\PYG{+w}{        }\PYG{n}{Debug}\PYG{p}{.}\PYG{n}{Log}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}[SERVER] Получено событие: \PYGZdq{}}\PYG{+w}{ }\PYG{o}{+}\PYG{+w}{ }\PYG{n}{puzzleEvent}\PYG{p}{.}\PYG{n}{eventType}\PYG{+w}{ }\PYG{o}{+}
+\PYG{+w}{                  }\PYG{l+s}{\PYGZdq{} | Key=\PYGZdq{}}\PYG{+w}{ }\PYG{o}{+}\PYG{+w}{ }\PYG{n}{eventKey}\PYG{+w}{ }\PYG{o}{+}
+\PYG{+w}{                  }\PYG{l+s}{\PYGZdq{} | Seq=\PYGZdq{}}\PYG{+w}{ }\PYG{o}{+}\PYG{+w}{ }\PYG{n}{puzzleEvent}\PYG{p}{.}\PYG{n}{sequenceNumber}\PYG{+w}{ }\PYG{o}{+}
+\PYG{+w}{                  }\PYG{l+s}{\PYGZdq{} | Player=\PYGZdq{}}\PYG{+w}{ }\PYG{o}{+}\PYG{+w}{ }\PYG{n}{puzzleEvent}\PYG{p}{.}\PYG{n}{sourcePlayerId}\PYG{p}{)}\PYG{p}{;}
+
+\PYG{+w}{        }\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{appliedEventKeys}\PYG{p}{.}\PYG{n}{Contains}\PYG{p}{(}\PYG{n}{eventKey}\PYG{p}{)}\PYG{p}{)}
+\PYG{+w}{        }\PYG{p}{\PYGZob{}}
+\PYG{+w}{            }\PYG{n}{Debug}\PYG{p}{.}\PYG{n}{LogWarning}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}[SERVER] Повтор события. FSM не меняем, отправляем только ACK: \PYGZdq{}}\PYG{+w}{ }\PYG{o}{+}\PYG{+w}{ }\PYG{n}{eventKey}\PYG{p}{)}\PYG{p}{;}
+
+\PYG{+w}{            }\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{ResearchMetrics}\PYG{p}{.}\PYG{n}{Instance}\PYG{+w}{ }\PYG{o}{!=}\PYG{+w}{ }\PYG{k}{null}\PYG{p}{)}
+\PYG{+w}{            }\PYG{p}{\PYGZob{}}
+\PYG{+w}{                }\PYG{n}{ResearchMetrics}\PYG{p}{.}\PYG{n}{Instance}\PYG{p}{.}\PYG{n}{RegisterDuplicateRejected}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
+\PYG{+w}{            }\PYG{p}{\PYGZcb{}}
+
+\PYG{+w}{            }\PYG{n}{SendAcknowledgement}\PYG{p}{(}\PYG{n}{puzzleEvent}\PYG{p}{.}\PYG{n}{eventId}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{puzzleEvent}\PYG{p}{.}\PYG{n}{sourcePlayerId}\PYG{p}{)}\PYG{p}{;}
+\PYG{+w}{            }\PYG{k}{return}\PYG{p}{;}
+\PYG{+w}{        }\PYG{p}{\PYGZcb{}}
+
+\PYG{+w}{        }\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{o}{!}\PYG{n}{expectedSequenceByPlayer}\PYG{p}{.}\PYG{n}{ContainsKey}\PYG{p}{(}\PYG{n}{puzzleEvent}\PYG{p}{.}\PYG{n}{sourcePlayerId}\PYG{p}{)}\PYG{p}{)}
+\PYG{+w}{        }\PYG{p}{\PYGZob{}}
+\PYG{+w}{            }\PYG{n}{expectedSequenceByPlayer}\PYG{p}{[}\PYG{n}{puzzleEvent}\PYG{p}{.}\PYG{n}{sourcePlayerId}\PYG{p}{]}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+m+mi}{1}\PYG{p}{;}
+\PYG{+w}{        }\PYG{p}{\PYGZcb{}}
+
+\PYG{+w}{        }\PYG{k+kt}{int}\PYG{+w}{ }\PYG{n}{expectedSequence}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{expectedSequenceByPlayer}\PYG{p}{[}\PYG{n}{puzzleEvent}\PYG{p}{.}\PYG{n}{sourcePlayerId}\PYG{p}{]}\PYG{p}{;}
+
+\PYG{+w}{        }\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{puzzleEvent}\PYG{p}{.}\PYG{n}{sequenceNumber}\PYG{+w}{ }\PYG{o}{\PYGZlt{}}\PYG{+w}{ }\PYG{n}{expectedSequence}\PYG{p}{)}
+\PYG{+w}{        }\PYG{p}{\PYGZob{}}
+\PYG{+w}{            }\PYG{n}{Debug}\PYG{p}{.}\PYG{n}{LogWarning}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}[SERVER] Старое событие. Ожидали Seq=\PYGZdq{}}\PYG{+w}{ }\PYG{o}{+}
+\PYG{+w}{                             }\PYG{n}{expectedSequence}\PYG{+w}{ }\PYG{o}{+}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}, получили Seq=\PYGZdq{}}\PYG{+w}{ }\PYG{o}{+}\PYG{+w}{ }\PYG{n}{puzzleEvent}\PYG{p}{.}\PYG{n}{sequenceNumber}\PYG{p}{)}\PYG{p}{;}
+
+\PYG{+w}{            }\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{ResearchMetrics}\PYG{p}{.}\PYG{n}{Instance}\PYG{+w}{ }\PYG{o}{!=}\PYG{+w}{ }\PYG{k}{null}\PYG{p}{)}
+\PYG{+w}{            }\PYG{p}{\PYGZob{}}
+\PYG{+w}{                }\PYG{n}{ResearchMetrics}\PYG{p}{.}\PYG{n}{Instance}\PYG{p}{.}\PYG{n}{RegisterWrongOrderRejected}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
+\PYG{+w}{            }\PYG{p}{\PYGZcb{}}
+
+\PYG{+w}{            }\PYG{n}{SendAcknowledgement}\PYG{p}{(}\PYG{n}{puzzleEvent}\PYG{p}{.}\PYG{n}{eventId}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{puzzleEvent}\PYG{p}{.}\PYG{n}{sourcePlayerId}\PYG{p}{)}\PYG{p}{;}
+\PYG{+w}{            }\PYG{k}{return}\PYG{p}{;}
+\PYG{+w}{        }\PYG{p}{\PYGZcb{}}
+
+\PYG{+w}{        }\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{puzzleEvent}\PYG{p}{.}\PYG{n}{sequenceNumber}\PYG{+w}{ }\PYG{o}{\PYGZgt{}}\PYG{+w}{ }\PYG{n}{expectedSequence}\PYG{p}{)}
+\PYG{+w}{        }\PYG{p}{\PYGZob{}}
+\PYG{+w}{            }\PYG{n}{Debug}\PYG{p}{.}\PYG{n}{LogWarning}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}[SERVER] Событие пришло слишком рано. Ожидали Seq=\PYGZdq{}}\PYG{+w}{ }\PYG{o}{+}
+\PYG{+w}{                             }\PYG{n}{expectedSequence}\PYG{+w}{ }\PYG{o}{+}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}, получили Seq=\PYGZdq{}}\PYG{+w}{ }\PYG{o}{+}\PYG{+w}{ }\PYG{n}{puzzleEvent}\PYG{p}{.}\PYG{n}{sequenceNumber}\PYG{p}{)}\PYG{p}{;}
+
+\PYG{+w}{            }\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{ResearchMetrics}\PYG{p}{.}\PYG{n}{Instance}\PYG{+w}{ }\PYG{o}{!=}\PYG{+w}{ }\PYG{k}{null}\PYG{p}{)}
+\PYG{+w}{            }\PYG{p}{\PYGZob{}}
+\PYG{+w}{                }\PYG{n}{ResearchMetrics}\PYG{p}{.}\PYG{n}{Instance}\PYG{p}{.}\PYG{n}{RegisterWrongOrderRejected}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
+\PYG{+w}{            }\PYG{p}{\PYGZcb{}}
+
+\PYG{+w}{            }\PYG{k}{return}\PYG{p}{;}
+\PYG{+w}{        }\PYG{p}{\PYGZcb{}}
+
+\PYG{+w}{        }\PYG{k+kt}{bool}\PYG{+w}{ }\PYG{n}{success}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{ApplyEventToFsm}\PYG{p}{(}\PYG{n}{puzzleEvent}\PYG{p}{)}\PYG{p}{;}
+
+\PYG{+w}{        }\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{o}{!}\PYG{n}{success}\PYG{p}{)}
+\PYG{+w}{        }\PYG{p}{\PYGZob{}}
+\PYG{+w}{            }\PYG{n}{Debug}\PYG{p}{.}\PYG{n}{LogWarning}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}[SERVER] Событие не прошло проверку FSM и не будет подтверждено\PYGZdq{}}\PYG{p}{)}\PYG{p}{;}
+\PYG{+w}{            }\PYG{k}{return}\PYG{p}{;}
+\PYG{+w}{        }\PYG{p}{\PYGZcb{}}
+
+\PYG{+w}{        }\PYG{n}{appliedEventKeys}\PYG{p}{.}\PYG{n}{Add}\PYG{p}{(}\PYG{n}{eventKey}\PYG{p}{)}\PYG{p}{;}
+\PYG{+w}{        }\PYG{n}{expectedSequenceByPlayer}\PYG{p}{[}\PYG{n}{puzzleEvent}\PYG{p}{.}\PYG{n}{sourcePlayerId}\PYG{p}{]}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{expectedSequence}\PYG{+w}{ }\PYG{o}{+}\PYG{+w}{ }\PYG{l+m+mi}{1}\PYG{p}{;}
+
+\PYG{+w}{        }\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{ResearchMetrics}\PYG{p}{.}\PYG{n}{Instance}\PYG{+w}{ }\PYG{o}{!=}\PYG{+w}{ }\PYG{k}{null}\PYG{p}{)}
+\PYG{+w}{        }\PYG{p}{\PYGZob{}}
+\PYG{+w}{            }\PYG{n}{ResearchMetrics}\PYG{p}{.}\PYG{n}{Instance}\PYG{p}{.}\PYG{n}{RegisterAppliedEvent}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
+\PYG{+w}{        }\PYG{p}{\PYGZcb{}}
+
+\PYG{+w}{        }\PYG{n}{Debug}\PYG{p}{.}\PYG{n}{Log}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}[SERVER] Событие применено. Следующий ожидаемый Seq для \PYGZdq{}}\PYG{+w}{ }\PYG{o}{+}
+\PYG{+w}{                  }\PYG{n}{puzzleEvent}\PYG{p}{.}\PYG{n}{sourcePlayerId}\PYG{+w}{ }\PYG{o}{+}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{} = \PYGZdq{}}\PYG{+w}{ }\PYG{o}{+}
+\PYG{+w}{                  }\PYG{n}{expectedSequenceByPlayer}\PYG{p}{[}\PYG{n}{puzzleEvent}\PYG{p}{.}\PYG{n}{sourcePlayerId}\PYG{p}{]}\PYG{p}{)}\PYG{p}{;}
+
+\PYG{+w}{        }\PYG{n}{SendAcknowledgement}\PYG{p}{(}\PYG{n}{puzzleEvent}\PYG{p}{.}\PYG{n}{eventId}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{puzzleEvent}\PYG{p}{.}\PYG{n}{sourcePlayerId}\PYG{p}{)}\PYG{p}{;}
+\PYG{+w}{        }\PYG{n}{SendPuzzleEventMessage}\PYG{p}{(}\PYG{n}{puzzleEvent}\PYG{p}{)}\PYG{p}{;}
+\PYG{+w}{    }\PYG{p}{\PYGZcb{}}
+
+\PYG{+w}{    }\PYG{k}{private}\PYG{+w}{ }\PYG{k}{void}\PYG{+w}{ }\PYG{n+nf}{HandleBasicPuzzleEventOnServer}\PYG{p}{(}\PYG{n}{PuzzleEvent}\PYG{+w}{ }\PYG{n}{puzzleEvent}\PYG{p}{)}
+\PYG{+w}{    }\PYG{p}{\PYGZob{}}
+\PYG{+w}{        }\PYG{k+kt}{string}\PYG{+w}{ }\PYG{n}{eventKey}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{GetEventKey}\PYG{p}{(}\PYG{n}{puzzleEvent}\PYG{p}{)}\PYG{p}{;}
+
+\PYG{+w}{        }\PYG{n}{Debug}\PYG{p}{.}\PYG{n}{Log}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}[BASE SERVER] Received event: \PYGZdq{}}\PYG{+w}{ }\PYG{o}{+}\PYG{+w}{ }\PYG{n}{puzzleEvent}\PYG{p}{.}\PYG{n}{eventType}\PYG{+w}{ }\PYG{o}{+}
+\PYG{+w}{                  }\PYG{l+s}{\PYGZdq{} | Key=\PYGZdq{}}\PYG{+w}{ }\PYG{o}{+}\PYG{+w}{ }\PYG{n}{eventKey}\PYG{+w}{ }\PYG{o}{+}
+\PYG{+w}{                  }\PYG{l+s}{\PYGZdq{} | Seq=\PYGZdq{}}\PYG{+w}{ }\PYG{o}{+}\PYG{+w}{ }\PYG{n}{puzzleEvent}\PYG{p}{.}\PYG{n}{sequenceNumber}\PYG{+w}{ }\PYG{o}{+}
+\PYG{+w}{                  }\PYG{l+s}{\PYGZdq{} | Player=\PYGZdq{}}\PYG{+w}{ }\PYG{o}{+}\PYG{+w}{ }\PYG{n}{puzzleEvent}\PYG{p}{.}\PYG{n}{sourcePlayerId}\PYG{p}{)}\PYG{p}{;}
+
+\PYG{+w}{        }\PYG{k+kt}{bool}\PYG{+w}{ }\PYG{n}{success}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{ApplyEventToFsm}\PYG{p}{(}\PYG{n}{puzzleEvent}\PYG{p}{)}\PYG{p}{;}
+
+\PYG{+w}{        }\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{o}{!}\PYG{n}{success}\PYG{p}{)}
+\PYG{+w}{        }\PYG{p}{\PYGZob{}}
+\PYG{+w}{            }\PYG{n}{Debug}\PYG{p}{.}\PYG{n}{LogWarning}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}[BASE SERVER] Event was not applied to FSM: \PYGZdq{}}\PYG{+w}{ }\PYG{o}{+}\PYG{+w}{ }\PYG{n}{eventKey}\PYG{p}{)}\PYG{p}{;}
+\PYG{+w}{            }\PYG{k}{return}\PYG{p}{;}
+\PYG{+w}{        }\PYG{p}{\PYGZcb{}}
+
+\PYG{+w}{        }\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{ResearchMetrics}\PYG{p}{.}\PYG{n}{Instance}\PYG{+w}{ }\PYG{o}{!=}\PYG{+w}{ }\PYG{k}{null}\PYG{p}{)}
+\PYG{+w}{        }\PYG{p}{\PYGZob{}}
+\PYG{+w}{            }\PYG{n}{ResearchMetrics}\PYG{p}{.}\PYG{n}{Instance}\PYG{p}{.}\PYG{n}{RegisterAppliedEvent}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
+\PYG{+w}{        }\PYG{p}{\PYGZcb{}}
+
+\PYG{+w}{        }\PYG{n}{SendPuzzleEventMessage}\PYG{p}{(}\PYG{n}{puzzleEvent}\PYG{p}{)}\PYG{p}{;}
+\PYG{+w}{    }\PYG{p}{\PYGZcb{}}
+
+\PYG{+w}{    }\PYG{k}{private}\PYG{+w}{ }\PYG{k}{void}\PYG{+w}{ }\PYG{n+nf}{HandleApprovedPuzzleEventOnClient}\PYG{p}{(}\PYG{n}{PuzzleEvent}\PYG{+w}{ }\PYG{n}{puzzleEvent}\PYG{p}{)}
+\PYG{+w}{    }\PYG{p}{\PYGZob{}}
+\PYG{+w}{        }\PYG{k+kt}{string}\PYG{+w}{ }\PYG{n}{eventKey}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{GetEventKey}\PYG{p}{(}\PYG{n}{puzzleEvent}\PYG{p}{)}\PYG{p}{;}
+
+\PYG{+w}{        }\PYG{n}{Debug}\PYG{p}{.}\PYG{n}{Log}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}[CLIENT \PYGZdq{}}\PYG{+w}{ }\PYG{o}{+}\PYG{+w}{ }\PYG{n}{localPlayerId}\PYG{+w}{ }\PYG{o}{+}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}] Получено подтверждённое сервером событие: \PYGZdq{}}\PYG{+w}{ }\PYG{o}{+}
+\PYG{+w}{                  }\PYG{n}{puzzleEvent}\PYG{p}{.}\PYG{n}{eventType}\PYG{+w}{ }\PYG{o}{+}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{} | Key=\PYGZdq{}}\PYG{+w}{ }\PYG{o}{+}\PYG{+w}{ }\PYG{n}{eventKey}\PYG{p}{)}\PYG{p}{;}
+
+\PYG{+w}{        }\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{puzzleEvent}\PYG{p}{.}\PYG{n}{sourcePlayerId}\PYG{+w}{ }\PYG{o}{==}\PYG{+w}{ }\PYG{n}{localPlayerId}\PYG{p}{)}
+\PYG{+w}{        }\PYG{p}{\PYGZob{}}
+\PYG{+w}{            }\PYG{n}{pendingEvents}\PYG{p}{.}\PYG{n}{Remove}\PYG{p}{(}\PYG{n}{puzzleEvent}\PYG{p}{.}\PYG{n}{eventId}\PYG{p}{)}\PYG{p}{;}
+\PYG{+w}{        }\PYG{p}{\PYGZcb{}}
+
+\PYG{+w}{        }\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{appliedEventKeys}\PYG{p}{.}\PYG{n}{Contains}\PYG{p}{(}\PYG{n}{eventKey}\PYG{p}{)}\PYG{p}{)}
+\PYG{+w}{        }\PYG{p}{\PYGZob{}}
+\PYG{+w}{            }\PYG{n}{Debug}\PYG{p}{.}\PYG{n}{LogWarning}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}[CLIENT \PYGZdq{}}\PYG{+w}{ }\PYG{o}{+}\PYG{+w}{ }\PYG{n}{localPlayerId}\PYG{+w}{ }\PYG{o}{+}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}] Повтор подтверждённого события отклонён: \PYGZdq{}}\PYG{+w}{ }\PYG{o}{+}\PYG{+w}{ }\PYG{n}{eventKey}\PYG{p}{)}\PYG{p}{;}
+
+\PYG{+w}{            }\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{ResearchMetrics}\PYG{p}{.}\PYG{n}{Instance}\PYG{+w}{ }\PYG{o}{!=}\PYG{+w}{ }\PYG{k}{null}\PYG{p}{)}
+\PYG{+w}{            }\PYG{p}{\PYGZob{}}
+\PYG{+w}{                }\PYG{n}{ResearchMetrics}\PYG{p}{.}\PYG{n}{Instance}\PYG{p}{.}\PYG{n}{RegisterDuplicateRejected}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
+\PYG{+w}{            }\PYG{p}{\PYGZcb{}}
+
+\PYG{+w}{            }\PYG{k}{return}\PYG{p}{;}
+\PYG{+w}{        }\PYG{p}{\PYGZcb{}}
+
+\PYG{+w}{        }\PYG{k+kt}{bool}\PYG{+w}{ }\PYG{n}{success}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{ApplyEventToFsm}\PYG{p}{(}\PYG{n}{puzzleEvent}\PYG{p}{)}\PYG{p}{;}
+
+\PYG{+w}{        }\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{success}\PYG{p}{)}
+\PYG{+w}{        }\PYG{p}{\PYGZob{}}
+\PYG{+w}{            }\PYG{n}{appliedEventKeys}\PYG{p}{.}\PYG{n}{Add}\PYG{p}{(}\PYG{n}{eventKey}\PYG{p}{)}\PYG{p}{;}
+
+\PYG{+w}{            }\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{ResearchMetrics}\PYG{p}{.}\PYG{n}{Instance}\PYG{+w}{ }\PYG{o}{!=}\PYG{+w}{ }\PYG{k}{null}\PYG{p}{)}
+\PYG{+w}{            }\PYG{p}{\PYGZob{}}
+\PYG{+w}{                }\PYG{n}{ResearchMetrics}\PYG{p}{.}\PYG{n}{Instance}\PYG{p}{.}\PYG{n}{RegisterAppliedEvent}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
+\PYG{+w}{            }\PYG{p}{\PYGZcb{}}
+
+\PYG{+w}{            }\PYG{n}{Debug}\PYG{p}{.}\PYG{n}{Log}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}[CLIENT \PYGZdq{}}\PYG{+w}{ }\PYG{o}{+}\PYG{+w}{ }\PYG{n}{localPlayerId}\PYG{+w}{ }\PYG{o}{+}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}] Событие применено локально: \PYGZdq{}}\PYG{+w}{ }\PYG{o}{+}\PYG{+w}{ }\PYG{n}{eventKey}\PYG{p}{)}\PYG{p}{;}
+\PYG{+w}{        }\PYG{p}{\PYGZcb{}}
+\PYG{+w}{        }\PYG{k}{else}
+\PYG{+w}{        }\PYG{p}{\PYGZob{}}
+\PYG{+w}{            }\PYG{n}{Debug}\PYG{p}{.}\PYG{n}{Log}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}[CLIENT \PYGZdq{}}\PYG{+w}{ }\PYG{o}{+}\PYG{+w}{ }\PYG{n}{localPlayerId}\PYG{+w}{ }\PYG{o}{+}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}] На этом клиенте нет целевого объекта, событие пропущено: \PYGZdq{}}\PYG{+w}{ }\PYG{o}{+}\PYG{+w}{ }\PYG{n}{puzzleEvent}\PYG{p}{.}\PYG{n}{targetObjectId}\PYG{p}{)}\PYG{p}{;}
+\PYG{+w}{        }\PYG{p}{\PYGZcb{}}
+\PYG{+w}{    }\PYG{p}{\PYGZcb{}}
+
+\PYG{+w}{    }\PYG{k}{private}\PYG{+w}{ }\PYG{k}{void}\PYG{+w}{ }\PYG{n+nf}{HandleBasicPuzzleEventOnClient}\PYG{p}{(}\PYG{n}{PuzzleEvent}\PYG{+w}{ }\PYG{n}{puzzleEvent}\PYG{p}{)}
+\PYG{+w}{    }\PYG{p}{\PYGZob{}}
+\PYG{+w}{        }\PYG{k+kt}{string}\PYG{+w}{ }\PYG{n}{eventKey}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{GetEventKey}\PYG{p}{(}\PYG{n}{puzzleEvent}\PYG{p}{)}\PYG{p}{;}
+
+\PYG{+w}{        }\PYG{n}{Debug}\PYG{p}{.}\PYG{n}{Log}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}[BASE CLIENT \PYGZdq{}}\PYG{+w}{ }\PYG{o}{+}\PYG{+w}{ }\PYG{n}{localPlayerId}\PYG{+w}{ }\PYG{o}{+}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}] Received server event: \PYGZdq{}}\PYG{+w}{ }\PYG{o}{+}
+\PYG{+w}{                  }\PYG{n}{puzzleEvent}\PYG{p}{.}\PYG{n}{eventType}\PYG{+w}{ }\PYG{o}{+}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{} | Key=\PYGZdq{}}\PYG{+w}{ }\PYG{o}{+}\PYG{+w}{ }\PYG{n}{eventKey}\PYG{p}{)}\PYG{p}{;}
+
+\PYG{+w}{        }\PYG{k+kt}{bool}\PYG{+w}{ }\PYG{n}{success}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{ApplyEventToFsm}\PYG{p}{(}\PYG{n}{puzzleEvent}\PYG{p}{)}\PYG{p}{;}
+
+\PYG{+w}{        }\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{success}\PYG{p}{)}
+\PYG{+w}{        }\PYG{p}{\PYGZob{}}
+\PYG{+w}{            }\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{ResearchMetrics}\PYG{p}{.}\PYG{n}{Instance}\PYG{+w}{ }\PYG{o}{!=}\PYG{+w}{ }\PYG{k}{null}\PYG{p}{)}
+\PYG{+w}{            }\PYG{p}{\PYGZob{}}
+\PYG{+w}{                }\PYG{n}{ResearchMetrics}\PYG{p}{.}\PYG{n}{Instance}\PYG{p}{.}\PYG{n}{RegisterAppliedEvent}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
+
+\PYG{+w}{                }\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{puzzleEvent}\PYG{p}{.}\PYG{n}{sourcePlayerId}\PYG{+w}{ }\PYG{o}{==}\PYG{+w}{ }\PYG{n}{localPlayerId}\PYG{p}{)}
+\PYG{+w}{                }\PYG{p}{\PYGZob{}}
+\PYG{+w}{                    }\PYG{n}{ResearchMetrics}\PYG{p}{.}\PYG{n}{Instance}\PYG{p}{.}\PYG{n}{RegisterAck}\PYG{p}{(}\PYG{n}{puzzleEvent}\PYG{p}{.}\PYG{n}{eventId}\PYG{p}{)}\PYG{p}{;}
+\PYG{+w}{                }\PYG{p}{\PYGZcb{}}
+\PYG{+w}{            }\PYG{p}{\PYGZcb{}}
+
+\PYG{+w}{            }\PYG{n}{Debug}\PYG{p}{.}\PYG{n}{Log}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}[BASE CLIENT \PYGZdq{}}\PYG{+w}{ }\PYG{o}{+}\PYG{+w}{ }\PYG{n}{localPlayerId}\PYG{+w}{ }\PYG{o}{+}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}] Event applied locally: \PYGZdq{}}\PYG{+w}{ }\PYG{o}{+}\PYG{+w}{ }\PYG{n}{eventKey}\PYG{p}{)}\PYG{p}{;}
+\PYG{+w}{        }\PYG{p}{\PYGZcb{}}
+\PYG{+w}{        }\PYG{k}{else}
+\PYG{+w}{        }\PYG{p}{\PYGZob{}}
+\PYG{+w}{            }\PYG{n}{Debug}\PYG{p}{.}\PYG{n}{Log}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}[BASE CLIENT \PYGZdq{}}\PYG{+w}{ }\PYG{o}{+}\PYG{+w}{ }\PYG{n}{localPlayerId}\PYG{+w}{ }\PYG{o}{+}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}] Event was not applied locally: \PYGZdq{}}\PYG{+w}{ }\PYG{o}{+}\PYG{+w}{ }\PYG{n}{eventKey}\PYG{p}{)}\PYG{p}{;}
+\PYG{+w}{        }\PYG{p}{\PYGZcb{}}
+\PYG{+w}{    }\PYG{p}{\PYGZcb{}}
+
+\PYG{+w}{    }\PYG{k}{private}\PYG{+w}{ }\PYG{k+kt}{bool}\PYG{+w}{ }\PYG{n+nf}{ApplyEventToFsm}\PYG{p}{(}\PYG{n}{PuzzleEvent}\PYG{+w}{ }\PYG{n}{puzzleEvent}\PYG{p}{)}
+\PYG{+w}{    }\PYG{p}{\PYGZob{}}
+\PYG{+w}{        }\PYG{n}{Debug}\PYG{p}{.}\PYG{n}{Log}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}[FSM] Применение события: \PYGZdq{}}\PYG{+w}{ }\PYG{o}{+}
+\PYG{+w}{                  }\PYG{n}{puzzleEvent}\PYG{p}{.}\PYG{n}{eventType}\PYG{+w}{ }\PYG{o}{+}
+\PYG{+w}{                  }\PYG{l+s}{\PYGZdq{} | SourceObject=\PYGZdq{}}\PYG{+w}{ }\PYG{o}{+}\PYG{+w}{ }\PYG{n}{puzzleEvent}\PYG{p}{.}\PYG{n}{sourceObjectId}\PYG{+w}{ }\PYG{o}{+}
+\PYG{+w}{                  }\PYG{l+s}{\PYGZdq{} | TargetObject=\PYGZdq{}}\PYG{+w}{ }\PYG{o}{+}\PYG{+w}{ }\PYG{n}{puzzleEvent}\PYG{p}{.}\PYG{n}{targetObjectId}\PYG{p}{)}\PYG{p}{;}
+
+\PYG{+w}{        }\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{o}{!}\PYG{n}{registeredObjects}\PYG{p}{.}\PYG{n}{TryGetValue}\PYG{p}{(}\PYG{n}{puzzleEvent}\PYG{p}{.}\PYG{n}{targetObjectId}\PYG{p}{,}\PYG{+w}{ }\PYG{k}{out}\PYG{+w}{ }\PYG{n}{IFsmPuzzleObject}\PYG{+w}{ }\PYG{n}{targetObject}\PYG{p}{)}\PYG{p}{)}
+\PYG{+w}{        }\PYG{p}{\PYGZob{}}
+\PYG{+w}{            }\PYG{n}{Debug}\PYG{p}{.}\PYG{n}{LogError}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}[FSM] Целевой объект не найден: \PYGZdq{}}\PYG{+w}{ }\PYG{o}{+}\PYG{+w}{ }\PYG{n}{puzzleEvent}\PYG{p}{.}\PYG{n}{targetObjectId}\PYG{p}{)}\PYG{p}{;}
+\PYG{+w}{            }\PYG{k}{return}\PYG{+w}{ }\PYG{k}{false}\PYG{p}{;}
+\PYG{+w}{        }\PYG{p}{\PYGZcb{}}
+
+\PYG{+w}{        }\PYG{k}{return}\PYG{+w}{ }\PYG{n}{targetObject}\PYG{p}{.}\PYG{n}{ApplyPuzzleEvent}\PYG{p}{(}\PYG{n}{puzzleEvent}\PYG{p}{)}\PYG{p}{;}
+\PYG{+w}{    }\PYG{p}{\PYGZcb{}}
+
+\PYG{+w}{    }\PYG{k}{private}\PYG{+w}{ }\PYG{k}{void}\PYG{+w}{ }\PYG{n+nf}{SendPuzzleEventMessage}\PYG{p}{(}\PYG{n}{PuzzleEvent}\PYG{+w}{ }\PYG{n}{puzzleEvent}\PYG{p}{)}
+\PYG{+w}{    }\PYG{p}{\PYGZob{}}
+\PYG{+w}{        }\PYG{n}{NetworkMessage}\PYG{+w}{ }\PYG{n}{message}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{NetworkMessage}\PYG{p}{.}\PYG{n}{CreatePuzzleEventMessage}\PYG{p}{(}\PYG{n}{puzzleEvent}\PYG{p}{)}\PYG{p}{;}
+\PYG{+w}{        }\PYG{n}{SendMessageToTransport}\PYG{p}{(}\PYG{n}{message}\PYG{p}{)}\PYG{p}{;}
+\PYG{+w}{    }\PYG{p}{\PYGZcb{}}
+
+\PYG{+w}{    }\PYG{k}{private}\PYG{+w}{ }\PYG{k}{void}\PYG{+w}{ }\PYG{n+nf}{SendAcknowledgement}\PYG{p}{(}\PYG{k+kt}{int}\PYG{+w}{ }\PYG{n}{eventId}\PYG{p}{,}\PYG{+w}{ }\PYG{k+kt}{string}\PYG{+w}{ }\PYG{n}{targetPlayerId}\PYG{p}{)}
+\PYG{+w}{    }\PYG{p}{\PYGZob{}}
+\PYG{+w}{        }\PYG{n}{NetworkMessage}\PYG{+w}{ }\PYG{n}{ackMessage}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{NetworkMessage}\PYG{p}{.}\PYG{n}{CreateAcknowledgementMessage}\PYG{p}{(}\PYG{n}{eventId}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{targetPlayerId}\PYG{p}{)}\PYG{p}{;}
+\PYG{+w}{        }\PYG{n}{SendMessageToTransport}\PYG{p}{(}\PYG{n}{ackMessage}\PYG{p}{)}\PYG{p}{;}
+
+\PYG{+w}{        }\PYG{n}{Debug}\PYG{p}{.}\PYG{n}{Log}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}[SERVER] Отправлен ACK для события: \PYGZdq{}}\PYG{+w}{ }\PYG{o}{+}\PYG{+w}{ }\PYG{n}{eventId}\PYG{+w}{ }\PYG{o}{+}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{} игроку \PYGZdq{}}\PYG{+w}{ }\PYG{o}{+}\PYG{+w}{ }\PYG{n}{targetPlayerId}\PYG{p}{)}\PYG{p}{;}
+\PYG{+w}{    }\PYG{p}{\PYGZcb{}}
+
+\PYG{+w}{    }\PYG{k}{private}\PYG{+w}{ }\PYG{k}{void}\PYG{+w}{ }\PYG{n+nf}{SendMessageToTransport}\PYG{p}{(}\PYG{n}{NetworkMessage}\PYG{+w}{ }\PYG{n}{message}\PYG{p}{)}
+\PYG{+w}{    }\PYG{p}{\PYGZob{}}
+\PYG{+w}{        }\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{UdpEventTransport}\PYG{p}{.}\PYG{n}{Instance}\PYG{+w}{ }\PYG{o}{==}\PYG{+w}{ }\PYG{k}{null}\PYG{p}{)}
+\PYG{+w}{        }\PYG{p}{\PYGZob{}}
+\PYG{+w}{            }\PYG{n}{Debug}\PYG{p}{.}\PYG{n}{LogError}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}[EventFsmSyncManager] UdpEventTransport не найден. Сообщение не отправлено.\PYGZdq{}}\PYG{p}{)}\PYG{p}{;}
+\PYG{+w}{            }\PYG{k}{return}\PYG{p}{;}
+\PYG{+w}{        }\PYG{p}{\PYGZcb{}}
+
+\PYG{+w}{        }\PYG{n}{UdpEventTransport}\PYG{p}{.}\PYG{n}{Instance}\PYG{p}{.}\PYG{n}{SendNetworkMessage}\PYG{p}{(}\PYG{n}{message}\PYG{p}{)}\PYG{p}{;}
+\PYG{+w}{    }\PYG{p}{\PYGZcb{}}
+
+\PYG{+w}{    }\PYG{k}{public}\PYG{+w}{ }\PYG{k}{void}\PYG{+w}{ }\PYG{n+nf}{BroadcastServerGeneratedEvent}\PYG{p}{(}\PYG{k+kt}{string}\PYG{+w}{ }\PYG{n}{sourceObjectId}\PYG{p}{,}\PYG{+w}{ }\PYG{k+kt}{string}\PYG{+w}{ }\PYG{n}{targetObjectId}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{PuzzleEventType}\PYG{+w}{ }\PYG{n}{eventType}\PYG{p}{)}
+\PYG{+w}{    }\PYG{p}{\PYGZob{}}
+\PYG{+w}{        }\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{role}\PYG{+w}{ }\PYG{o}{!=}\PYG{+w}{ }\PYG{n}{NetworkRole}\PYG{p}{.}\PYG{n}{Server}\PYG{p}{)}
+\PYG{+w}{        }\PYG{p}{\PYGZob{}}
+\PYG{+w}{            }\PYG{n}{Debug}\PYG{p}{.}\PYG{n}{LogWarning}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}[EventFsmSyncManager] Только сервер может создавать серверные события\PYGZdq{}}\PYG{p}{)}\PYG{p}{;}
+\PYG{+w}{            }\PYG{k}{return}\PYG{p}{;}
+\PYG{+w}{        }\PYG{p}{\PYGZcb{}}
+
+\PYG{+w}{        }\PYG{n}{PuzzleEvent}\PYG{+w}{ }\PYG{n}{puzzleEvent}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{k}{new}\PYG{+w}{ }\PYG{n}{PuzzleEvent}\PYG{p}{(}
+\PYG{+w}{            }\PYG{n}{nextEventId}\PYG{o}{++}\PYG{p}{,}
+\PYG{+w}{            }\PYG{n}{nextSequenceNumber}\PYG{o}{++}\PYG{p}{,}
+\PYG{+w}{            }\PYG{l+s}{\PYGZdq{}Server\PYGZdq{}}\PYG{p}{,}
+\PYG{+w}{            }\PYG{n}{sourceObjectId}\PYG{p}{,}
+\PYG{+w}{            }\PYG{n}{targetObjectId}\PYG{p}{,}
+\PYG{+w}{            }\PYG{n}{eventType}
+\PYG{+w}{        }\PYG{p}{)}\PYG{p}{;}
+
+\PYG{+w}{        }\PYG{n}{Debug}\PYG{p}{.}\PYG{n}{Log}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}[SERVER] Создано серверное событие: \PYGZdq{}}\PYG{+w}{ }\PYG{o}{+}
+\PYG{+w}{                  }\PYG{n}{eventType}\PYG{+w}{ }\PYG{o}{+}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{} | Target=\PYGZdq{}}\PYG{+w}{ }\PYG{o}{+}\PYG{+w}{ }\PYG{n}{targetObjectId}\PYG{p}{)}\PYG{p}{;}
+
+\PYG{+w}{        }\PYG{n}{SendPuzzleEventMessage}\PYG{p}{(}\PYG{n}{puzzleEvent}\PYG{p}{)}\PYG{p}{;}
+\PYG{+w}{    }\PYG{p}{\PYGZcb{}}
+\PYG{p}{\PYGZcb{}}
+\end{MintedVerbatim}

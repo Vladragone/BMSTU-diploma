@@ -1,0 +1,335 @@
+\begin{MintedVerbatim}[commandchars=\\\{\},codes={\catcode`\$=3\catcode`\^=7\catcode`\_=8\relax}]
+\PYG{k}{using}\PYG{+w}{ }\PYG{n+nn}{System.Collections}\PYG{p}{;}
+\PYG{k}{using}\PYG{+w}{ }\PYG{n+nn}{System.Collections.Generic}\PYG{p}{;}
+\PYG{k}{using}\PYG{+w}{ }\PYG{n+nn}{System.Net}\PYG{p}{;}
+\PYG{k}{using}\PYG{+w}{ }\PYG{n+nn}{System.Net.Sockets}\PYG{p}{;}
+\PYG{k}{using}\PYG{+w}{ }\PYG{n+nn}{System.Text}\PYG{p}{;}
+\PYG{k}{using}\PYG{+w}{ }\PYG{n+nn}{System.Threading}\PYG{p}{;}
+\PYG{k}{using}\PYG{+w}{ }\PYG{n+nn}{UnityEngine}\PYG{p}{;}
+
+\PYG{k}{public}\PYG{+w}{ }\PYG{k}{class}\PYG{+w}{ }\PYG{n+nc}{UdpEventTransport}\PYG{+w}{ }\PYG{p}{:}\PYG{+w}{ }\PYG{n}{MonoBehaviour}
+\PYG{p}{\PYGZob{}}
+\PYG{+w}{    }\PYG{k}{public}\PYG{+w}{ }\PYG{k}{static}\PYG{+w}{ }\PYG{n}{UdpEventTransport}\PYG{+w}{ }\PYG{n}{Instance}\PYG{+w}{ }\PYG{p}{\PYGZob{}}\PYG{+w}{ }\PYG{k}{get}\PYG{p}{;}\PYG{+w}{ }\PYG{k}{private}\PYG{+w}{ }\PYG{k}{set}\PYG{p}{;}\PYG{+w}{ }\PYG{p}{\PYGZcb{}}
+
+\PYG{+w}{    }\PYG{n+na}{[Header(\PYGZdq{}Role\PYGZdq{})]}
+\PYG{+w}{    }\PYG{k}{public}\PYG{+w}{ }\PYG{n}{NetworkRole}\PYG{+w}{ }\PYG{n}{role}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{NetworkRole}\PYG{p}{.}\PYG{n}{Server}\PYG{p}{;}
+
+\PYG{+w}{    }\PYG{n+na}{[Header(\PYGZdq{}Network Settings\PYGZdq{})]}
+\PYG{+w}{    }\PYG{k}{public}\PYG{+w}{ }\PYG{k+kt}{string}\PYG{+w}{ }\PYG{n}{serverIp}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}127.0.0.1\PYGZdq{}}\PYG{p}{;}
+\PYG{+w}{    }\PYG{k}{public}\PYG{+w}{ }\PYG{k+kt}{int}\PYG{+w}{ }\PYG{n}{serverPort}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+m+mi}{7777}\PYG{p}{;}
+\PYG{+w}{    }\PYG{k}{public}\PYG{+w}{ }\PYG{k+kt}{int}\PYG{+w}{ }\PYG{n}{clientPort}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+m+mi}{7778}\PYG{p}{;}
+
+\PYG{+w}{    }\PYG{n+na}{[Header(\PYGZdq{}Bad Internet Test\PYGZdq{})]}
+\PYG{+w}{    }\PYG{n+na}{[Range(0f, 1f)]}
+\PYG{+w}{    }\PYG{k}{public}\PYG{+w}{ }\PYG{k+kt}{float}\PYG{+w}{ }\PYG{n}{outgoingPacketLossChance}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+m+mf}{0f}\PYG{p}{;}
+
+\PYG{+w}{    }\PYG{n+na}{[Tooltip(\PYGZdq{}Средняя искусственная задержка отправки в миллисекундах\PYGZdq{})]}
+\PYG{+w}{    }\PYG{k}{public}\PYG{+w}{ }\PYG{k+kt}{float}\PYG{+w}{ }\PYG{n}{artificialLatencyMs}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+m+mf}{0f}\PYG{p}{;}
+
+\PYG{+w}{    }\PYG{n+na}{[Tooltip(\PYGZdq{}Разброс задержки в миллисекундах\PYGZdq{})]}
+\PYG{+w}{    }\PYG{k}{public}\PYG{+w}{ }\PYG{k+kt}{float}\PYG{+w}{ }\PYG{n}{jitterMs}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+m+mf}{0f}\PYG{p}{;}
+
+\PYG{+w}{    }\PYG{n+na}{[Range(0f, 1f)]}
+\PYG{+w}{    }\PYG{k}{public}\PYG{+w}{ }\PYG{k+kt}{float}\PYG{+w}{ }\PYG{n}{duplicatePacketChance}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+m+mf}{0f}\PYG{p}{;}
+
+\PYG{+w}{    }\PYG{k}{private}\PYG{+w}{ }\PYG{n}{UdpClient}\PYG{+w}{ }\PYG{n}{udpClient}\PYG{p}{;}
+\PYG{+w}{    }\PYG{k}{private}\PYG{+w}{ }\PYG{n}{IPEndPoint}\PYG{+w}{ }\PYG{n}{serverEndPoint}\PYG{p}{;}
+
+\PYG{+w}{    }\PYG{k}{private}\PYG{+w}{ }\PYG{n}{Thread}\PYG{+w}{ }\PYG{n}{receiveThread}\PYG{p}{;}
+\PYG{+w}{    }\PYG{k}{private}\PYG{+w}{ }\PYG{k+kt}{bool}\PYG{+w}{ }\PYG{n}{isRunning}\PYG{p}{;}
+
+\PYG{+w}{    }\PYG{k}{private}\PYG{+w}{ }\PYG{k}{readonly}\PYG{+w}{ }\PYG{n}{Queue}\PYG{o}{\PYGZlt{}}\PYG{n}{NetworkMessage}\PYG{o}{\PYGZgt{}}\PYG{+w}{ }\PYG{n}{receivedMessages}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{k}{new}\PYG{+w}{ }\PYG{n}{Queue}\PYG{o}{\PYGZlt{}}\PYG{n}{NetworkMessage}\PYG{o}{\PYGZgt{}}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
+\PYG{+w}{    }\PYG{k}{private}\PYG{+w}{ }\PYG{k}{readonly}\PYG{+w}{ }\PYG{k+kt}{object}\PYG{+w}{ }\PYG{n}{queueLock}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{k}{new}\PYG{+w}{ }\PYG{k+kt}{object}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
+
+\PYG{+w}{    }\PYG{k}{private}\PYG{+w}{ }\PYG{k}{readonly}\PYG{+w}{ }\PYG{n}{Dictionary}\PYG{o}{\PYGZlt{}}\PYG{k+kt}{string}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{IPEndPoint}\PYG{o}{\PYGZgt{}}\PYG{+w}{ }\PYG{n}{clientEndPoints}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{k}{new}\PYG{+w}{ }\PYG{n}{Dictionary}\PYG{o}{\PYGZlt{}}\PYG{k+kt}{string}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{IPEndPoint}\PYG{o}{\PYGZgt{}}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
+\PYG{+w}{    }\PYG{k}{private}\PYG{+w}{ }\PYG{k}{readonly}\PYG{+w}{ }\PYG{k+kt}{object}\PYG{+w}{ }\PYG{n}{clientsLock}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{k}{new}\PYG{+w}{ }\PYG{k+kt}{object}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
+
+\PYG{+w}{    }\PYG{k}{private}\PYG{+w}{ }\PYG{k}{void}\PYG{+w}{ }\PYG{n+nf}{Awake}\PYG{p}{(}\PYG{p}{)}
+\PYG{+w}{    }\PYG{p}{\PYGZob{}}
+\PYG{+w}{        }\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{Instance}\PYG{+w}{ }\PYG{o}{!=}\PYG{+w}{ }\PYG{k}{null}\PYG{+w}{ }\PYG{o}{\PYGZam{}\PYGZam{}}\PYG{+w}{ }\PYG{n}{Instance}\PYG{+w}{ }\PYG{o}{!=}\PYG{+w}{ }\PYG{k}{this}\PYG{p}{)}
+\PYG{+w}{        }\PYG{p}{\PYGZob{}}
+\PYG{+w}{            }\PYG{n}{Destroy}\PYG{p}{(}\PYG{n}{gameObject}\PYG{p}{)}\PYG{p}{;}
+\PYG{+w}{            }\PYG{k}{return}\PYG{p}{;}
+\PYG{+w}{        }\PYG{p}{\PYGZcb{}}
+
+\PYG{+w}{        }\PYG{n}{Instance}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{k}{this}\PYG{p}{;}
+\PYG{+w}{    }\PYG{p}{\PYGZcb{}}
+
+\PYG{+w}{    }\PYG{k}{private}\PYG{+w}{ }\PYG{k}{void}\PYG{+w}{ }\PYG{n+nf}{Start}\PYG{p}{(}\PYG{p}{)}
+\PYG{+w}{    }\PYG{p}{\PYGZob{}}
+\PYG{+w}{        }\PYG{n}{StartTransport}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
+
+\PYG{+w}{        }\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{role}\PYG{+w}{ }\PYG{o}{==}\PYG{+w}{ }\PYG{n}{NetworkRole}\PYG{p}{.}\PYG{n}{Client}\PYG{p}{)}
+\PYG{+w}{        }\PYG{p}{\PYGZob{}}
+\PYG{+w}{            }\PYG{n}{SendClientHello}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
+\PYG{+w}{        }\PYG{p}{\PYGZcb{}}
+\PYG{+w}{    }\PYG{p}{\PYGZcb{}}
+
+\PYG{+w}{    }\PYG{k}{private}\PYG{+w}{ }\PYG{k}{void}\PYG{+w}{ }\PYG{n+nf}{Update}\PYG{p}{(}\PYG{p}{)}
+\PYG{+w}{    }\PYG{p}{\PYGZob{}}
+\PYG{+w}{        }\PYG{n}{ProcessReceivedMessagesOnMainThread}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
+\PYG{+w}{    }\PYG{p}{\PYGZcb{}}
+
+\PYG{+w}{    }\PYG{k}{private}\PYG{+w}{ }\PYG{k}{void}\PYG{+w}{ }\PYG{n+nf}{OnDestroy}\PYG{p}{(}\PYG{p}{)}
+\PYG{+w}{    }\PYG{p}{\PYGZob{}}
+\PYG{+w}{        }\PYG{n}{StopTransport}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
+\PYG{+w}{    }\PYG{p}{\PYGZcb{}}
+
+\PYG{+w}{    }\PYG{k}{public}\PYG{+w}{ }\PYG{k}{void}\PYG{+w}{ }\PYG{n+nf}{StartTransport}\PYG{p}{(}\PYG{p}{)}
+\PYG{+w}{    }\PYG{p}{\PYGZob{}}
+\PYG{+w}{        }\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{isRunning}\PYG{p}{)}
+\PYG{+w}{            }\PYG{k}{return}\PYG{p}{;}
+
+\PYG{+w}{        }\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{role}\PYG{+w}{ }\PYG{o}{==}\PYG{+w}{ }\PYG{n}{NetworkRole}\PYG{p}{.}\PYG{n}{Server}\PYG{p}{)}
+\PYG{+w}{        }\PYG{p}{\PYGZob{}}
+\PYG{+w}{            }\PYG{n}{udpClient}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{k}{new}\PYG{+w}{ }\PYG{n}{UdpClient}\PYG{p}{(}\PYG{n}{serverPort}\PYG{p}{)}\PYG{p}{;}
+\PYG{+w}{            }\PYG{n}{Debug}\PYG{p}{.}\PYG{n}{Log}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}[UDP SERVER] Started on port \PYGZdq{}}\PYG{+w}{ }\PYG{o}{+}\PYG{+w}{ }\PYG{n}{serverPort}\PYG{p}{)}\PYG{p}{;}
+\PYG{+w}{        }\PYG{p}{\PYGZcb{}}
+\PYG{+w}{        }\PYG{k}{else}
+\PYG{+w}{        }\PYG{p}{\PYGZob{}}
+\PYG{+w}{            }\PYG{n}{udpClient}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{k}{new}\PYG{+w}{ }\PYG{n}{UdpClient}\PYG{p}{(}\PYG{n}{clientPort}\PYG{p}{)}\PYG{p}{;}
+\PYG{+w}{            }\PYG{n}{serverEndPoint}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{k}{new}\PYG{+w}{ }\PYG{n}{IPEndPoint}\PYG{p}{(}\PYG{n}{IPAddress}\PYG{p}{.}\PYG{n}{Parse}\PYG{p}{(}\PYG{n}{serverIp}\PYG{p}{)}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{serverPort}\PYG{p}{)}\PYG{p}{;}
+\PYG{+w}{            }\PYG{n}{Debug}\PYG{p}{.}\PYG{n}{Log}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}[UDP CLIENT] Started on port \PYGZdq{}}\PYG{+w}{ }\PYG{o}{+}\PYG{+w}{ }\PYG{n}{clientPort}\PYG{p}{)}\PYG{p}{;}
+\PYG{+w}{        }\PYG{p}{\PYGZcb{}}
+
+\PYG{+w}{        }\PYG{n}{isRunning}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{k}{true}\PYG{p}{;}
+
+\PYG{+w}{        }\PYG{n}{receiveThread}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{k}{new}\PYG{+w}{ }\PYG{n}{Thread}\PYG{p}{(}\PYG{n}{ReceiveLoop}\PYG{p}{)}\PYG{p}{;}
+\PYG{+w}{        }\PYG{n}{receiveThread}\PYG{p}{.}\PYG{n}{IsBackground}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{k}{true}\PYG{p}{;}
+\PYG{+w}{        }\PYG{n}{receiveThread}\PYG{p}{.}\PYG{n}{Start}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
+\PYG{+w}{    }\PYG{p}{\PYGZcb{}}
+
+\PYG{+w}{    }\PYG{k}{public}\PYG{+w}{ }\PYG{k}{void}\PYG{+w}{ }\PYG{n+nf}{StopTransport}\PYG{p}{(}\PYG{p}{)}
+\PYG{+w}{    }\PYG{p}{\PYGZob{}}
+\PYG{+w}{        }\PYG{n}{isRunning}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{k}{false}\PYG{p}{;}
+
+\PYG{+w}{        }\PYG{k}{try}
+\PYG{+w}{        }\PYG{p}{\PYGZob{}}
+\PYG{+w}{            }\PYG{n}{udpClient}\PYG{o}{?.}\PYG{n}{Close}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
+\PYG{+w}{        }\PYG{p}{\PYGZcb{}}
+\PYG{+w}{        }\PYG{k}{catch}
+\PYG{+w}{        }\PYG{p}{\PYGZob{}}
+\PYG{+w}{        }\PYG{p}{\PYGZcb{}}
+
+\PYG{+w}{        }\PYG{k}{try}
+\PYG{+w}{        }\PYG{p}{\PYGZob{}}
+\PYG{+w}{            }\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{receiveThread}\PYG{+w}{ }\PYG{o}{!=}\PYG{+w}{ }\PYG{k}{null}\PYG{+w}{ }\PYG{o}{\PYGZam{}\PYGZam{}}\PYG{+w}{ }\PYG{n}{receiveThread}\PYG{p}{.}\PYG{n}{IsAlive}\PYG{p}{)}
+\PYG{+w}{            }\PYG{p}{\PYGZob{}}
+\PYG{+w}{                }\PYG{n}{receiveThread}\PYG{p}{.}\PYG{n}{Join}\PYG{p}{(}\PYG{l+m+mi}{100}\PYG{p}{)}\PYG{p}{;}
+\PYG{+w}{            }\PYG{p}{\PYGZcb{}}
+\PYG{+w}{        }\PYG{p}{\PYGZcb{}}
+\PYG{+w}{        }\PYG{k}{catch}
+\PYG{+w}{        }\PYG{p}{\PYGZob{}}
+\PYG{+w}{        }\PYG{p}{\PYGZcb{}}
+\PYG{+w}{    }\PYG{p}{\PYGZcb{}}
+
+\PYG{+w}{    }\PYG{k}{private}\PYG{+w}{ }\PYG{k}{void}\PYG{+w}{ }\PYG{n+nf}{SendClientHello}\PYG{p}{(}\PYG{p}{)}
+\PYG{+w}{    }\PYG{p}{\PYGZob{}}
+\PYG{+w}{        }\PYG{k+kt}{string}\PYG{+w}{ }\PYG{n}{playerId}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}Unknown\PYGZdq{}}\PYG{p}{;}
+
+\PYG{+w}{        }\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{EventFsmSyncManager}\PYG{p}{.}\PYG{n}{Instance}\PYG{+w}{ }\PYG{o}{!=}\PYG{+w}{ }\PYG{k}{null}\PYG{p}{)}
+\PYG{+w}{        }\PYG{p}{\PYGZob{}}
+\PYG{+w}{            }\PYG{n}{playerId}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{EventFsmSyncManager}\PYG{p}{.}\PYG{n}{Instance}\PYG{p}{.}\PYG{n}{localPlayerId}\PYG{p}{;}
+\PYG{+w}{        }\PYG{p}{\PYGZcb{}}
+
+\PYG{+w}{        }\PYG{n}{NetworkMessage}\PYG{+w}{ }\PYG{n}{hello}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{NetworkMessage}\PYG{p}{.}\PYG{n}{CreateClientHelloMessage}\PYG{p}{(}\PYG{n}{playerId}\PYG{p}{)}\PYG{p}{;}
+\PYG{+w}{        }\PYG{n}{SendNetworkMessage}\PYG{p}{(}\PYG{n}{hello}\PYG{p}{)}\PYG{p}{;}
+
+\PYG{+w}{        }\PYG{n}{Debug}\PYG{p}{.}\PYG{n}{Log}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}[UDP CLIENT] Sent ClientHello: \PYGZdq{}}\PYG{+w}{ }\PYG{o}{+}\PYG{+w}{ }\PYG{n}{playerId}\PYG{p}{)}\PYG{p}{;}
+\PYG{+w}{    }\PYG{p}{\PYGZcb{}}
+
+\PYG{+w}{    }\PYG{k}{public}\PYG{+w}{ }\PYG{k}{void}\PYG{+w}{ }\PYG{n+nf}{SendNetworkMessage}\PYG{p}{(}\PYG{n}{NetworkMessage}\PYG{+w}{ }\PYG{n}{message}\PYG{p}{)}
+\PYG{+w}{    }\PYG{p}{\PYGZob{}}
+\PYG{+w}{        }\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{message}\PYG{+w}{ }\PYG{o}{==}\PYG{+w}{ }\PYG{k}{null}\PYG{p}{)}
+\PYG{+w}{        }\PYG{p}{\PYGZob{}}
+\PYG{+w}{            }\PYG{n}{Debug}\PYG{p}{.}\PYG{n}{LogError}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}[UDP] Нельзя отправить пустое сообщение\PYGZdq{}}\PYG{p}{)}\PYG{p}{;}
+\PYG{+w}{            }\PYG{k}{return}\PYG{p}{;}
+\PYG{+w}{        }\PYG{p}{\PYGZcb{}}
+
+\PYG{+w}{        }\PYG{k+kt}{string}\PYG{+w}{ }\PYG{n}{json}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{JsonUtility}\PYG{p}{.}\PYG{n}{ToJson}\PYG{p}{(}\PYG{n}{message}\PYG{p}{)}\PYG{p}{;}
+\PYG{+w}{        }\PYG{k+kt}{byte}\PYG{p}{[}\PYG{p}{]}\PYG{+w}{ }\PYG{n}{data}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{Encoding}\PYG{p}{.}\PYG{n}{UTF8}\PYG{p}{.}\PYG{n}{GetBytes}\PYG{p}{(}\PYG{n}{json}\PYG{p}{)}\PYG{p}{;}
+
+\PYG{+w}{        }\PYG{n}{StartCoroutine}\PYG{p}{(}\PYG{n}{SendWithNetworkConditions}\PYG{p}{(}\PYG{n}{data}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{json}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{message}\PYG{p}{.}\PYG{n}{messageType}\PYG{p}{)}\PYG{p}{)}\PYG{p}{;}
+\PYG{+w}{    }\PYG{p}{\PYGZcb{}}
+
+\PYG{+w}{    }\PYG{k}{private}\PYG{+w}{ }\PYG{n}{IEnumerator}\PYG{+w}{ }\PYG{n+nf}{SendWithNetworkConditions}\PYG{p}{(}\PYG{k+kt}{byte}\PYG{p}{[}\PYG{p}{]}\PYG{+w}{ }\PYG{n}{data}\PYG{p}{,}\PYG{+w}{ }\PYG{k+kt}{string}\PYG{+w}{ }\PYG{n}{json}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{NetworkMessageType}\PYG{+w}{ }\PYG{n}{messageType}\PYG{p}{)}
+\PYG{+w}{    }\PYG{p}{\PYGZob{}}
+\PYG{+w}{        }\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{Random}\PYG{p}{.}\PYG{k}{value}\PYG{+w}{ }\PYG{o}{\PYGZlt{}}\PYG{+w}{ }\PYG{n}{outgoingPacketLossChance}\PYG{p}{)}
+\PYG{+w}{        }\PYG{p}{\PYGZob{}}
+\PYG{+w}{            }\PYG{n}{Debug}\PYG{p}{.}\PYG{n}{LogWarning}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}[UDP \PYGZdq{}}\PYG{+w}{ }\PYG{o}{+}\PYG{+w}{ }\PYG{n}{role}\PYG{+w}{ }\PYG{o}{+}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}] Имитируем потерю исходящего пакета: \PYGZdq{}}\PYG{+w}{ }\PYG{o}{+}\PYG{+w}{ }\PYG{n}{messageType}\PYG{p}{)}\PYG{p}{;}
+
+\PYG{+w}{            }\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{ResearchMetrics}\PYG{p}{.}\PYG{n}{Instance}\PYG{+w}{ }\PYG{o}{!=}\PYG{+w}{ }\PYG{k}{null}\PYG{p}{)}
+\PYG{+w}{            }\PYG{p}{\PYGZob{}}
+\PYG{+w}{                }\PYG{n}{ResearchMetrics}\PYG{p}{.}\PYG{n}{Instance}\PYG{p}{.}\PYG{n}{RegisterPacketLoss}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
+\PYG{+w}{            }\PYG{p}{\PYGZcb{}}
+
+\PYG{+w}{            }\PYG{k}{yield}\PYG{+w}{ }\PYG{k}{break}\PYG{p}{;}
+\PYG{+w}{        }\PYG{p}{\PYGZcb{}}
+
+\PYG{+w}{        }\PYG{k+kt}{float}\PYG{+w}{ }\PYG{n}{finalDelayMs}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{artificialLatencyMs}\PYG{p}{;}
+
+\PYG{+w}{        }\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{jitterMs}\PYG{+w}{ }\PYG{o}{\PYGZgt{}}\PYG{+w}{ }\PYG{l+m+mf}{0f}\PYG{p}{)}
+\PYG{+w}{        }\PYG{p}{\PYGZob{}}
+\PYG{+w}{            }\PYG{n}{finalDelayMs}\PYG{+w}{ }\PYG{o}{+=}\PYG{+w}{ }\PYG{n}{Random}\PYG{p}{.}\PYG{n}{Range}\PYG{p}{(}\PYG{o}{\PYGZhy{}}\PYG{n}{jitterMs}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{jitterMs}\PYG{p}{)}\PYG{p}{;}
+\PYG{+w}{        }\PYG{p}{\PYGZcb{}}
+
+\PYG{+w}{        }\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{finalDelayMs}\PYG{+w}{ }\PYG{o}{\PYGZlt{}}\PYG{+w}{ }\PYG{l+m+mf}{0f}\PYG{p}{)}
+\PYG{+w}{        }\PYG{p}{\PYGZob{}}
+\PYG{+w}{            }\PYG{n}{finalDelayMs}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+m+mf}{0f}\PYG{p}{;}
+\PYG{+w}{        }\PYG{p}{\PYGZcb{}}
+
+\PYG{+w}{        }\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{finalDelayMs}\PYG{+w}{ }\PYG{o}{\PYGZgt{}}\PYG{+w}{ }\PYG{l+m+mf}{0f}\PYG{p}{)}
+\PYG{+w}{        }\PYG{p}{\PYGZob{}}
+\PYG{+w}{            }\PYG{k}{yield}\PYG{+w}{ }\PYG{k}{return}\PYG{+w}{ }\PYG{k}{new}\PYG{+w}{ }\PYG{n+nf}{WaitForSeconds}\PYG{p}{(}\PYG{n}{finalDelayMs}\PYG{+w}{ }\PYG{o}{/}\PYG{+w}{ }\PYG{l+m+mf}{1000f}\PYG{p}{)}\PYG{p}{;}
+\PYG{+w}{        }\PYG{p}{\PYGZcb{}}
+
+\PYG{+w}{        }\PYG{n}{SendRaw}\PYG{p}{(}\PYG{n}{data}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{json}\PYG{p}{)}\PYG{p}{;}
+
+\PYG{+w}{        }\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{ResearchMetrics}\PYG{p}{.}\PYG{n}{Instance}\PYG{+w}{ }\PYG{o}{!=}\PYG{+w}{ }\PYG{k}{null}\PYG{p}{)}
+\PYG{+w}{        }\PYG{p}{\PYGZob{}}
+\PYG{+w}{            }\PYG{n}{ResearchMetrics}\PYG{p}{.}\PYG{n}{Instance}\PYG{p}{.}\PYG{n}{RegisterSentMessage}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
+\PYG{+w}{        }\PYG{p}{\PYGZcb{}}
+
+\PYG{+w}{        }\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{Random}\PYG{p}{.}\PYG{k}{value}\PYG{+w}{ }\PYG{o}{\PYGZlt{}}\PYG{+w}{ }\PYG{n}{duplicatePacketChance}\PYG{p}{)}
+\PYG{+w}{        }\PYG{p}{\PYGZob{}}
+\PYG{+w}{            }\PYG{n}{Debug}\PYG{p}{.}\PYG{n}{LogWarning}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}[UDP \PYGZdq{}}\PYG{+w}{ }\PYG{o}{+}\PYG{+w}{ }\PYG{n}{role}\PYG{+w}{ }\PYG{o}{+}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}] Имитируем дубликат пакета: \PYGZdq{}}\PYG{+w}{ }\PYG{o}{+}\PYG{+w}{ }\PYG{n}{messageType}\PYG{p}{)}\PYG{p}{;}
+
+\PYG{+w}{            }\PYG{k}{yield}\PYG{+w}{ }\PYG{k}{return}\PYG{+w}{ }\PYG{k}{new}\PYG{+w}{ }\PYG{n+nf}{WaitForSeconds}\PYG{p}{(}\PYG{l+m+mf}{0.05f}\PYG{p}{)}\PYG{p}{;}
+
+\PYG{+w}{            }\PYG{n}{SendRaw}\PYG{p}{(}\PYG{n}{data}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{json}\PYG{p}{)}\PYG{p}{;}
+
+\PYG{+w}{            }\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{ResearchMetrics}\PYG{p}{.}\PYG{n}{Instance}\PYG{+w}{ }\PYG{o}{!=}\PYG{+w}{ }\PYG{k}{null}\PYG{p}{)}
+\PYG{+w}{            }\PYG{p}{\PYGZob{}}
+\PYG{+w}{                }\PYG{n}{ResearchMetrics}\PYG{p}{.}\PYG{n}{Instance}\PYG{p}{.}\PYG{n}{RegisterSentMessage}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
+\PYG{+w}{            }\PYG{p}{\PYGZcb{}}
+\PYG{+w}{        }\PYG{p}{\PYGZcb{}}
+\PYG{+w}{    }\PYG{p}{\PYGZcb{}}
+
+\PYG{+w}{    }\PYG{k}{private}\PYG{+w}{ }\PYG{k}{void}\PYG{+w}{ }\PYG{n+nf}{SendRaw}\PYG{p}{(}\PYG{k+kt}{byte}\PYG{p}{[}\PYG{p}{]}\PYG{+w}{ }\PYG{n}{data}\PYG{p}{,}\PYG{+w}{ }\PYG{k+kt}{string}\PYG{+w}{ }\PYG{n}{json}\PYG{p}{)}
+\PYG{+w}{    }\PYG{p}{\PYGZob{}}
+\PYG{+w}{        }\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{role}\PYG{+w}{ }\PYG{o}{==}\PYG{+w}{ }\PYG{n}{NetworkRole}\PYG{p}{.}\PYG{n}{Client}\PYG{p}{)}
+\PYG{+w}{        }\PYG{p}{\PYGZob{}}
+\PYG{+w}{            }\PYG{n}{SendToServer}\PYG{p}{(}\PYG{n}{data}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{json}\PYG{p}{)}\PYG{p}{;}
+\PYG{+w}{        }\PYG{p}{\PYGZcb{}}
+\PYG{+w}{        }\PYG{k}{else}
+\PYG{+w}{        }\PYG{p}{\PYGZob{}}
+\PYG{+w}{            }\PYG{n}{BroadcastToClients}\PYG{p}{(}\PYG{n}{data}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{json}\PYG{p}{)}\PYG{p}{;}
+\PYG{+w}{        }\PYG{p}{\PYGZcb{}}
+\PYG{+w}{    }\PYG{p}{\PYGZcb{}}
+
+\PYG{+w}{    }\PYG{k}{private}\PYG{+w}{ }\PYG{k}{void}\PYG{+w}{ }\PYG{n+nf}{SendToServer}\PYG{p}{(}\PYG{k+kt}{byte}\PYG{p}{[}\PYG{p}{]}\PYG{+w}{ }\PYG{n}{data}\PYG{p}{,}\PYG{+w}{ }\PYG{k+kt}{string}\PYG{+w}{ }\PYG{n}{json}\PYG{p}{)}
+\PYG{+w}{    }\PYG{p}{\PYGZob{}}
+\PYG{+w}{        }\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{udpClient}\PYG{+w}{ }\PYG{o}{==}\PYG{+w}{ }\PYG{k}{null}\PYG{+w}{ }\PYG{o}{||}\PYG{+w}{ }\PYG{n}{serverEndPoint}\PYG{+w}{ }\PYG{o}{==}\PYG{+w}{ }\PYG{k}{null}\PYG{p}{)}
+\PYG{+w}{        }\PYG{p}{\PYGZob{}}
+\PYG{+w}{            }\PYG{n}{Debug}\PYG{p}{.}\PYG{n}{LogError}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}[UDP CLIENT] UDP не запущен или адрес сервера не задан\PYGZdq{}}\PYG{p}{)}\PYG{p}{;}
+\PYG{+w}{            }\PYG{k}{return}\PYG{p}{;}
+\PYG{+w}{        }\PYG{p}{\PYGZcb{}}
+
+\PYG{+w}{        }\PYG{n}{udpClient}\PYG{p}{.}\PYG{n}{Send}\PYG{p}{(}\PYG{n}{data}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{data}\PYG{p}{.}\PYG{n}{Length}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{serverEndPoint}\PYG{p}{)}\PYG{p}{;}
+\PYG{+w}{        }\PYG{n}{Debug}\PYG{p}{.}\PYG{n}{Log}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}[UDP CLIENT] Sent message: \PYGZdq{}}\PYG{+w}{ }\PYG{o}{+}\PYG{+w}{ }\PYG{n}{json}\PYG{p}{)}\PYG{p}{;}
+\PYG{+w}{    }\PYG{p}{\PYGZcb{}}
+
+\PYG{+w}{    }\PYG{k}{private}\PYG{+w}{ }\PYG{k}{void}\PYG{+w}{ }\PYG{n+nf}{BroadcastToClients}\PYG{p}{(}\PYG{k+kt}{byte}\PYG{p}{[}\PYG{p}{]}\PYG{+w}{ }\PYG{n}{data}\PYG{p}{,}\PYG{+w}{ }\PYG{k+kt}{string}\PYG{+w}{ }\PYG{n}{json}\PYG{p}{)}
+\PYG{+w}{    }\PYG{p}{\PYGZob{}}
+\PYG{+w}{        }\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{udpClient}\PYG{+w}{ }\PYG{o}{==}\PYG{+w}{ }\PYG{k}{null}\PYG{p}{)}
+\PYG{+w}{        }\PYG{p}{\PYGZob{}}
+\PYG{+w}{            }\PYG{n}{Debug}\PYG{p}{.}\PYG{n}{LogError}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}[UDP SERVER] UDP не запущен\PYGZdq{}}\PYG{p}{)}\PYG{p}{;}
+\PYG{+w}{            }\PYG{k}{return}\PYG{p}{;}
+\PYG{+w}{        }\PYG{p}{\PYGZcb{}}
+
+\PYG{+w}{        }\PYG{k}{lock}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{clientsLock}\PYG{p}{)}
+\PYG{+w}{        }\PYG{p}{\PYGZob{}}
+\PYG{+w}{            }\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{clientEndPoints}\PYG{p}{.}\PYG{n}{Count}\PYG{+w}{ }\PYG{o}{==}\PYG{+w}{ }\PYG{l+m+mi}{0}\PYG{p}{)}
+\PYG{+w}{            }\PYG{p}{\PYGZob{}}
+\PYG{+w}{                }\PYG{n}{Debug}\PYG{p}{.}\PYG{n}{LogWarning}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}[UDP SERVER] Нет зарегистрированных клиентов для рассылки\PYGZdq{}}\PYG{p}{)}\PYG{p}{;}
+\PYG{+w}{                }\PYG{k}{return}\PYG{p}{;}
+\PYG{+w}{            }\PYG{p}{\PYGZcb{}}
+
+\PYG{+w}{            }\PYG{k}{foreach}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{KeyValuePair}\PYG{o}{\PYGZlt{}}\PYG{k+kt}{string}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{IPEndPoint}\PYG{o}{\PYGZgt{}}\PYG{+w}{ }\PYG{n}{client}\PYG{+w}{ }\PYG{k}{in}\PYG{+w}{ }\PYG{n}{clientEndPoints}\PYG{p}{)}
+\PYG{+w}{            }\PYG{p}{\PYGZob{}}
+\PYG{+w}{                }\PYG{n}{udpClient}\PYG{p}{.}\PYG{n}{Send}\PYG{p}{(}\PYG{n}{data}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{data}\PYG{p}{.}\PYG{n}{Length}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{client}\PYG{p}{.}\PYG{n}{Value}\PYG{p}{)}\PYG{p}{;}
+\PYG{+w}{                }\PYG{n}{Debug}\PYG{p}{.}\PYG{n}{Log}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}[UDP SERVER] Sent to \PYGZdq{}}\PYG{+w}{ }\PYG{o}{+}\PYG{+w}{ }\PYG{n}{client}\PYG{p}{.}\PYG{n}{Key}\PYG{+w}{ }\PYG{o}{+}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}: \PYGZdq{}}\PYG{+w}{ }\PYG{o}{+}\PYG{+w}{ }\PYG{n}{json}\PYG{p}{)}\PYG{p}{;}
+\PYG{+w}{            }\PYG{p}{\PYGZcb{}}
+\PYG{+w}{        }\PYG{p}{\PYGZcb{}}
+\PYG{+w}{    }\PYG{p}{\PYGZcb{}}
+
+\PYG{+w}{    }\PYG{k}{private}\PYG{+w}{ }\PYG{k}{void}\PYG{+w}{ }\PYG{n+nf}{ReceiveLoop}\PYG{p}{(}\PYG{p}{)}
+\PYG{+w}{    }\PYG{p}{\PYGZob{}}
+\PYG{+w}{        }\PYG{k}{while}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{isRunning}\PYG{p}{)}
+\PYG{+w}{        }\PYG{p}{\PYGZob{}}
+\PYG{+w}{            }\PYG{k}{try}
+\PYG{+w}{            }\PYG{p}{\PYGZob{}}
+\PYG{+w}{                }\PYG{n}{IPEndPoint}\PYG{+w}{ }\PYG{n}{senderEndPoint}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{k}{new}\PYG{+w}{ }\PYG{n}{IPEndPoint}\PYG{p}{(}\PYG{n}{IPAddress}\PYG{p}{.}\PYG{n}{Any}\PYG{p}{,}\PYG{+w}{ }\PYG{l+m+mi}{0}\PYG{p}{)}\PYG{p}{;}
+\PYG{+w}{                }\PYG{k+kt}{byte}\PYG{p}{[}\PYG{p}{]}\PYG{+w}{ }\PYG{n}{data}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{udpClient}\PYG{p}{.}\PYG{n}{Receive}\PYG{p}{(}\PYG{k}{ref}\PYG{+w}{ }\PYG{n}{senderEndPoint}\PYG{p}{)}\PYG{p}{;}
+
+\PYG{+w}{                }\PYG{k+kt}{string}\PYG{+w}{ }\PYG{n}{json}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{Encoding}\PYG{p}{.}\PYG{n}{UTF8}\PYG{p}{.}\PYG{n}{GetString}\PYG{p}{(}\PYG{n}{data}\PYG{p}{)}\PYG{p}{;}
+\PYG{+w}{                }\PYG{n}{NetworkMessage}\PYG{+w}{ }\PYG{n}{message}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{JsonUtility}\PYG{p}{.}\PYG{n}{FromJson}\PYG{o}{\PYGZlt{}}\PYG{n}{NetworkMessage}\PYG{o}{\PYGZgt{}}\PYG{p}{(}\PYG{n}{json}\PYG{p}{)}\PYG{p}{;}
+
+\PYG{+w}{                }\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{role}\PYG{+w}{ }\PYG{o}{==}\PYG{+w}{ }\PYG{n}{NetworkRole}\PYG{p}{.}\PYG{n}{Server}\PYG{p}{)}
+\PYG{+w}{                }\PYG{p}{\PYGZob{}}
+\PYG{+w}{                    }\PYG{n}{RegisterClientEndPoint}\PYG{p}{(}\PYG{n}{message}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{senderEndPoint}\PYG{p}{)}\PYG{p}{;}
+\PYG{+w}{                }\PYG{p}{\PYGZcb{}}
+
+\PYG{+w}{                }\PYG{k}{lock}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{queueLock}\PYG{p}{)}
+\PYG{+w}{                }\PYG{p}{\PYGZob{}}
+\PYG{+w}{                    }\PYG{n}{receivedMessages}\PYG{p}{.}\PYG{n}{Enqueue}\PYG{p}{(}\PYG{n}{message}\PYG{p}{)}\PYG{p}{;}
+\PYG{+w}{                }\PYG{p}{\PYGZcb{}}
+\PYG{+w}{            }\PYG{p}{\PYGZcb{}}
+\PYG{+w}{            }\PYG{k}{catch}
+\PYG{+w}{            }\PYG{p}{\PYGZob{}}
+\PYG{+w}{            }\PYG{p}{\PYGZcb{}}
+\PYG{+w}{        }\PYG{p}{\PYGZcb{}}
+\PYG{+w}{    }\PYG{p}{\PYGZcb{}}
+
+\PYG{+w}{    }\PYG{k}{private}\PYG{+w}{ }\PYG{k}{void}\PYG{+w}{ }\PYG{n+nf}{RegisterClientEndPoint}\PYG{p}{(}\PYG{n}{NetworkMessage}\PYG{+w}{ }\PYG{n}{message}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{IPEndPoint}\PYG{+w}{ }\PYG{n}{senderEndPoint}\PYG{p}{)}
+\PYG{+w}{    }\PYG{p}{\PYGZob{}}
+\PYG{+w}{        }\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{message}\PYG{+w}{ }\PYG{o}{==}\PYG{+w}{ }\PYG{k}{null}\PYG{p}{)}
+\PYG{+w}{            }\PYG{k}{return}\PYG{p}{;}
+
+\PYG{+w}{        }\PYG{k+kt}{string}\PYG{+w}{ }\PYG{n}{playerId}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}\PYGZdq{}}\PYG{p}{;}
+
+\PYG{+w}{        }\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{message}\PYG{p}{.}\PYG{n}{messageType}\PYG{+w}{ }\PYG{o}{==}\PYG{+w}{ }\PYG{n}{NetworkMessageType}\PYG{p}{.}\PYG{n}{ClientHello}\PYG{p}{)}
+\PYG{+w}{        }\PYG{p}{\PYGZob{}}
+\PYG{+w}{            }\PYG{n}{playerId}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{message}\PYG{p}{.}\PYG{n}{senderPlayerId}\PYG{p}{;}
+\PYG{+w}{        }\PYG{p}{\PYGZcb{}}
+\PYG{+w}{        }\PYG{k}{else}\PYG{+w}{ }\PYG{n+nf}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{message}\PYG{p}{.}\PYG{n}{puzzleEvent}\PYG{+w}{ }\PYG{o}{!=}\PYG{+w}{ }\PYG{k}{null}\PYG{p}{)}
+\PYG{+w}{        }\PYG{p}{\PYGZob{}}
+\PYG{+w}{            }\PYG{n}{playerId}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{message}\PYG{p}{.}\PYG{n}{puzzleEvent}\PYG{p}{.}\PYG{n}{sourcePlayerId}\PYG{p}{;}
+\PYG{+w}{        }\PYG{p}{\PYGZcb{}}
+
+\PYG{+w}{        }\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{k+kt}{string}\PYG{p}{.}\PYG{n}{IsNullOrWhiteSpace}\PYG{p}{(}\PYG{n}{playerId}\PYG{p}{)}\PYG{p}{)}
+\PYG{+w}{            }\PYG{k}{return}\PYG{p}{;}
+
+\PYG{+w}{        }\PYG{k}{lock}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{clientsLock}\PYG{p}{)}
+\PYG{+w}{        }\PYG{p}{\PYGZob{}}
+\PYG{+w}{            }\PYG{n}{clientEndPoints}\PYG{p}{[}\PYG{n}{playerId}\PYG{p}{]}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{senderEndPoint}\PYG{p}{;}
+\PYG{+w}{        }\PYG{p}{\PYGZcb{}}
+\PYG{+w}{    }\PYG{p}{\PYGZcb{}}
+
+\PYG{+w}{    }\PYG{k}{private}\PYG{+w}{ }\PYG{k}{void}\PYG{+w}{ }\PYG{n+nf}{ProcessReceivedMessagesOnMainThread}\PYG{p}{(}\PYG{p}{)}
+\PYG{+w}{    }\PYG{p}{\PYGZob{}}
+\PYG{+w}{        }\PYG{k}{while}\PYG{+w}{ }\PYG{p}{(}\PYG{k}{true}\PYG{p}{)}
+\PYG{+w}{        }\PYG{p}{\PYGZob{}}
+\PYG{+w}{            }\PYG{n}{NetworkMessage}\PYG{+w}{ }\PYG{n}{message}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{k}{null}\PYG{p}{;}
+
+\PYG{+w}{            }\PYG{k}{lock}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{queueLock}\PYG{p}{)}
+\PYG{+w}{            }\PYG{p}{\PYGZob{}}
+\PYG{+w}{                }\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{receivedMessages}\PYG{p}{.}\PYG{n}{Count}\PYG{+w}{ }\PYG{o}{\PYGZgt{}}\PYG{+w}{ }\PYG{l+m+mi}{0}\PYG{p}{)}
+\PYG{+w}{                }\PYG{p}{\PYGZob{}}
+\PYG{+w}{                    }\PYG{n}{message}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{receivedMessages}\PYG{p}{.}\PYG{n}{Dequeue}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
+\PYG{+w}{                }\PYG{p}{\PYGZcb{}}
+\PYG{+w}{            }\PYG{p}{\PYGZcb{}}
+
+\PYG{+w}{            }\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{message}\PYG{+w}{ }\PYG{o}{==}\PYG{+w}{ }\PYG{k}{null}\PYG{p}{)}
+\PYG{+w}{                }\PYG{k}{break}\PYG{p}{;}
+
+\PYG{+w}{            }\PYG{n}{Debug}\PYG{p}{.}\PYG{n}{Log}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}[UDP \PYGZdq{}}\PYG{+w}{ }\PYG{o}{+}\PYG{+w}{ }\PYG{n}{role}\PYG{+w}{ }\PYG{o}{+}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}] Received message type: \PYGZdq{}}\PYG{+w}{ }\PYG{o}{+}\PYG{+w}{ }\PYG{n}{message}\PYG{p}{.}\PYG{n}{messageType}\PYG{p}{)}\PYG{p}{;}
+
+\PYG{+w}{            }\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{EventFsmSyncManager}\PYG{p}{.}\PYG{n}{Instance}\PYG{+w}{ }\PYG{o}{!=}\PYG{+w}{ }\PYG{k}{null}\PYG{p}{)}
+\PYG{+w}{            }\PYG{p}{\PYGZob{}}
+\PYG{+w}{                }\PYG{n}{EventFsmSyncManager}\PYG{p}{.}\PYG{n}{Instance}\PYG{p}{.}\PYG{n}{OnNetworkMessageReceived}\PYG{p}{(}\PYG{n}{message}\PYG{p}{)}\PYG{p}{;}
+\PYG{+w}{            }\PYG{p}{\PYGZcb{}}
+\PYG{+w}{        }\PYG{p}{\PYGZcb{}}
+\PYG{+w}{    }\PYG{p}{\PYGZcb{}}
+\PYG{p}{\PYGZcb{}}
+\end{MintedVerbatim}

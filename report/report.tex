@@ -1,0 +1,82 @@
+\documentclass{bmstu}
+
+\usepackage{graphicx}
+\usepackage{longtable}
+\usepackage{listings}
+\usepackage{xcolor}
+\RequirePackage[listings]{tcolorbox}
+\tcbuselibrary{listings,breakable,minted,skins}
+
+\bibliography{biblio}
+\setlist[itemize]{label=---}
+
+\newtcbinputlisting[auto counter,number within=chapter]{\sourcelisting}[4][]{
+	enhanced,
+	before={\par\medskip\noindent Листинг~\thetcbcounter~--~#3\par\nobreak\vspace{2pt}},
+	after={\par\medskip},
+	arc=0mm,
+	boxrule=1pt,
+	listing only,
+	listing file={#2},
+	listing engine=minted,
+	minted language=csharp,
+	minted options={
+		linenos,
+		breaklines=true,
+		breakanywhere=true,
+		breakbefore=.,
+		breakafter={,()[]},
+		fontsize=\small\ttfamily,
+		numbersep=1.5mm,
+		firstnumber=1,
+		escapeinside=~~,
+		#1
+	},
+	colback=white,
+	colframe=black,
+	breakable,
+	enlarge top at break by=5mm,
+	overlay first={
+		\draw[line width=.5pt] (frame.south west)--(frame.south east);
+	},
+	overlay middle={
+		\draw[line width=.5pt] (frame.south west)--(frame.south east);
+		\draw[line width=.5pt] (frame.north west)--(frame.north east);
+		\node[anchor=south west, inner xsep=0pt, xshift=0pt] at (frame.north west) {Продолжение листинга \thetcbcounter};
+	},
+	overlay last={
+		\draw[line width=.5pt] (frame.north west)--(frame.north east);
+		\node[anchor=south west, inner xsep=0pt, xshift=0pt] at (frame.north west) {Окончание листинга \thetcbcounter};
+	},
+	label={#4}
+}
+
+\begin{document}
+
+\makethesistitle
+	{Информатика и системы управления}
+	{Программное обеспечение ЭВМ и информационные технологии}
+	{Метод обеспечения согласованности состояний двух асинхронных игроков с помощью конечных автоматов}
+	{В.~А.~Лукьяненко/ИУ7-81Б}
+	{Д.~А.~Кузнецов}
+	{}{}
+
+\setcounter{page}{5}
+\include{00-essay}
+
+\maketableofcontents
+
+\include{02-abbreviations}
+
+\include{03-introduction}
+\include{04-analysis}
+\include{05-design}
+\include{06-implementation}
+\include{07-research}
+\include{08-conclusion}
+
+\makebibliography
+
+\include{09-appendix}
+
+\end{document}

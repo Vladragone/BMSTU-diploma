@@ -1,0 +1,527 @@
+% $ biblatex auxiliary file $
+% $ biblatex bbl format version 3.3 $
+% Do not modify the above lines!
+%
+% This is an auxiliary file used by the 'biblatex' package.
+% This file may safely be deleted. It will be recreated by
+% biber as required.
+%
+\begingroup
+\makeatletter
+\@ifundefined{ver@biblatex.sty}
+  {\@latex@error
+     {Missing 'biblatex' package}
+     {The bibliography requires the 'biblatex' package.}
+      \aftergroup\endinput}
+  {}
+\endgroup
+
+
+\refsection{0}
+  \datalist[entry]{none/global//global/global/global}
+    \entry{smed2002networkgames}{book}{}{}
+      \name{author}{2}{}{%
+        {{hash=362f56e9db6fd1507d5bf0071b036f41}{%
+           family={Smed},
+           familyi={S\bibinitperiod},
+           given={Jouni},
+           giveni={J\bibinitperiod}}}%
+        {{hash=ec3f34e34d03918e1709cef3aab71957}{%
+           family={Hakonen},
+           familyi={H\bibinitperiod},
+           given={Harri},
+           giveni={H\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {The electronic library}%
+      }
+      \strng{namehash}{fdf0bffac11dd501a3e196acad2f7641}
+      \strng{fullhash}{fdf0bffac11dd501a3e196acad2f7641}
+      \strng{fullhashraw}{fdf0bffac11dd501a3e196acad2f7641}
+      \strng{bibnamehash}{fdf0bffac11dd501a3e196acad2f7641}
+      \strng{authorbibnamehash}{fdf0bffac11dd501a3e196acad2f7641}
+      \strng{authornamehash}{fdf0bffac11dd501a3e196acad2f7641}
+      \strng{authorfullhash}{fdf0bffac11dd501a3e196acad2f7641}
+      \strng{authorfullhashraw}{fdf0bffac11dd501a3e196acad2f7641}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{langid}{english}
+      \field{title}{Aspects of Networking in Multiplayer Computer Games}
+      \field{year}{2002}
+    \endentry
+    \entry{tanenbaum2017distributed}{book}{}{}
+      \name{author}{2}{}{%
+        {{hash=2414455c999bc471f803cd14fdea939d}{%
+           family={Tanenbaum},
+           familyi={T\bibinitperiod},
+           given={Andrew\bibnamedelima S.},
+           giveni={A\bibinitperiod\bibinitdelim S\bibinitperiod}}}%
+        {{hash=63fcd374584d66d99158dfd680f50f2e}{%
+           family={Van\bibnamedelima Steen},
+           familyi={V\bibinitperiod\bibinitdelim S\bibinitperiod},
+           given={Maarten},
+           giveni={M\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {Pearson}%
+      }
+      \strng{namehash}{c0e356439e69c55e6551b8a7c0516755}
+      \strng{fullhash}{c0e356439e69c55e6551b8a7c0516755}
+      \strng{fullhashraw}{c0e356439e69c55e6551b8a7c0516755}
+      \strng{bibnamehash}{c0e356439e69c55e6551b8a7c0516755}
+      \strng{authorbibnamehash}{c0e356439e69c55e6551b8a7c0516755}
+      \strng{authornamehash}{c0e356439e69c55e6551b8a7c0516755}
+      \strng{authorfullhash}{c0e356439e69c55e6551b8a7c0516755}
+      \strng{authorfullhashraw}{c0e356439e69c55e6551b8a7c0516755}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{langid}{english}
+      \field{title}{Distributed Systems}
+      \field{year}{2017}
+    \endentry
+    \entry{gamedevnetsync}{misc}{}{}
+      \name{author}{1}{}{%
+        {{hash=1cf0f11213db40d088c94d74a6cb71b3}{%
+           family={Gambetta},
+           familyi={G\bibinitperiod},
+           given={Gabriel},
+           giveni={G\bibinitperiod}}}%
+      }
+      \strng{namehash}{1cf0f11213db40d088c94d74a6cb71b3}
+      \strng{fullhash}{1cf0f11213db40d088c94d74a6cb71b3}
+      \strng{fullhashraw}{1cf0f11213db40d088c94d74a6cb71b3}
+      \strng{bibnamehash}{1cf0f11213db40d088c94d74a6cb71b3}
+      \strng{authorbibnamehash}{1cf0f11213db40d088c94d74a6cb71b3}
+      \strng{authornamehash}{1cf0f11213db40d088c94d74a6cb71b3}
+      \strng{authorfullhash}{1cf0f11213db40d088c94d74a6cb71b3}
+      \strng{authorfullhashraw}{1cf0f11213db40d088c94d74a6cb71b3}
+      \field{extraname}{1}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{langid}{russian}
+      \field{title}{Fast-Paced Multiplayer (Part I): Client-Server Game Architecture [Электронный ресурс]}
+      \field{urlday}{23}
+      \field{urlmonth}{11}
+      \field{urlyear}{2025}
+      \field{urldateera}{ce}
+      \verb{urlraw}
+      \verb https://www.gabrielgambetta.com/client-server-game-architecture.html
+      \endverb
+      \verb{url}
+      \verb https://www.gabrielgambetta.com/client-server-game-architecture.html
+      \endverb
+    \endentry
+    \entry{valvesource}{misc}{}{}
+      \name{author}{1}{}{%
+        {{hash=19191a1f1e36b834c6132ff82f781b8d}{%
+           family={Corporation},
+           familyi={C\bibinitperiod},
+           given={Valve},
+           giveni={V\bibinitperiod}}}%
+      }
+      \strng{namehash}{19191a1f1e36b834c6132ff82f781b8d}
+      \strng{fullhash}{19191a1f1e36b834c6132ff82f781b8d}
+      \strng{fullhashraw}{19191a1f1e36b834c6132ff82f781b8d}
+      \strng{bibnamehash}{19191a1f1e36b834c6132ff82f781b8d}
+      \strng{authorbibnamehash}{19191a1f1e36b834c6132ff82f781b8d}
+      \strng{authornamehash}{19191a1f1e36b834c6132ff82f781b8d}
+      \strng{authorfullhash}{19191a1f1e36b834c6132ff82f781b8d}
+      \strng{authorfullhashraw}{19191a1f1e36b834c6132ff82f781b8d}
+      \field{sortinit}{3}
+      \field{sortinithash}{ad6fe7482ffbd7b9f99c9e8b5dccd3d7}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{langid}{russian}
+      \field{title}{Source Multiplayer Networking [Электронный ресурс]}
+      \field{urlday}{20}
+      \field{urlmonth}{11}
+      \field{urlyear}{2025}
+      \field{year}{2021}
+      \field{urldateera}{ce}
+      \verb{urlraw}
+      \verb https://developer.valvesoftware.com/wiki/Source_Multiplayer_Networking
+      \endverb
+      \verb{url}
+      \verb https://developer.valvesoftware.com/wiki/Source_Multiplayer_Networking
+      \endverb
+    \endentry
+    \entry{unity_netcode_docs}{misc}{}{}
+      \name{author}{1}{}{%
+        {{hash=90be999720b0d0b2a8d5132207c73182}{%
+           family={Technologies},
+           familyi={T\bibinitperiod},
+           given={Unity},
+           giveni={U\bibinitperiod}}}%
+      }
+      \strng{namehash}{90be999720b0d0b2a8d5132207c73182}
+      \strng{fullhash}{90be999720b0d0b2a8d5132207c73182}
+      \strng{fullhashraw}{90be999720b0d0b2a8d5132207c73182}
+      \strng{bibnamehash}{90be999720b0d0b2a8d5132207c73182}
+      \strng{authorbibnamehash}{90be999720b0d0b2a8d5132207c73182}
+      \strng{authornamehash}{90be999720b0d0b2a8d5132207c73182}
+      \strng{authorfullhash}{90be999720b0d0b2a8d5132207c73182}
+      \strng{authorfullhashraw}{90be999720b0d0b2a8d5132207c73182}
+      \field{sortinit}{4}
+      \field{sortinithash}{9381316451d1b9788675a07e972a12a7}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{langid}{russian}
+      \field{title}{Unity Netcode for GameObjects Documentation [Электронный ресурс]}
+      \field{urlday}{22}
+      \field{urlmonth}{11}
+      \field{urlyear}{2025}
+      \field{year}{2025}
+      \field{urldateera}{ce}
+      \verb{urlraw}
+      \verb https://docs-multiplayer.unity3d.com
+      \endverb
+      \verb{url}
+      \verb https://docs-multiplayer.unity3d.com
+      \endverb
+    \endentry
+    \entry{unreal_replicate}{misc}{}{}
+      \name{author}{1}{}{%
+        {{hash=458bc88bbe8feb870616791eae79a483}{%
+           family={Games},
+           familyi={G\bibinitperiod},
+           given={Epic},
+           giveni={E\bibinitperiod}}}%
+      }
+      \strng{namehash}{458bc88bbe8feb870616791eae79a483}
+      \strng{fullhash}{458bc88bbe8feb870616791eae79a483}
+      \strng{fullhashraw}{458bc88bbe8feb870616791eae79a483}
+      \strng{bibnamehash}{458bc88bbe8feb870616791eae79a483}
+      \strng{authorbibnamehash}{458bc88bbe8feb870616791eae79a483}
+      \strng{authornamehash}{458bc88bbe8feb870616791eae79a483}
+      \strng{authorfullhash}{458bc88bbe8feb870616791eae79a483}
+      \strng{authorfullhashraw}{458bc88bbe8feb870616791eae79a483}
+      \field{sortinit}{5}
+      \field{sortinithash}{20e9b4b0b173788c5dace24730f47d8c}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{langid}{russian}
+      \field{title}{Unreal Engine Networking and Replication Guide [Электронный ресурс]}
+      \field{urlday}{19}
+      \field{urlmonth}{11}
+      \field{urlyear}{2025}
+      \field{year}{2025}
+      \field{urldateera}{ce}
+      \verb{urlraw}
+      \verb https://dev.epicgames.com/
+      \endverb
+      \verb{url}
+      \verb https://dev.epicgames.com/
+      \endverb
+    \endentry
+    \entry{GameEventSync2008}{book}{}{}
+      \name{author}{1}{}{%
+        {{hash=628fbcc3ffa5d0192283a628a731aa1c}{%
+           family={Furht},
+           familyi={F\bibinitperiod},
+           given={Borko},
+           giveni={B\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {Springer}%
+      }
+      \strng{namehash}{628fbcc3ffa5d0192283a628a731aa1c}
+      \strng{fullhash}{628fbcc3ffa5d0192283a628a731aa1c}
+      \strng{fullhashraw}{628fbcc3ffa5d0192283a628a731aa1c}
+      \strng{bibnamehash}{628fbcc3ffa5d0192283a628a731aa1c}
+      \strng{authorbibnamehash}{628fbcc3ffa5d0192283a628a731aa1c}
+      \strng{authornamehash}{628fbcc3ffa5d0192283a628a731aa1c}
+      \strng{authorfullhash}{628fbcc3ffa5d0192283a628a731aa1c}
+      \strng{authorfullhashraw}{628fbcc3ffa5d0192283a628a731aa1c}
+      \field{sortinit}{6}
+      \field{sortinithash}{b33bc299efb3c36abec520a4c896a66d}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{langid}{english}
+      \field{title}{Encyclopedia of Multimedia}
+      \field{year}{2008}
+    \endentry
+    \entry{photon_sync}{misc}{}{}
+      \name{author}{1}{}{%
+        {{hash=9cf0871210fa389018fe63dbb3c6dcc4}{%
+           family={Engine},
+           familyi={E\bibinitperiod},
+           given={Photon},
+           giveni={P\bibinitperiod}}}%
+      }
+      \strng{namehash}{9cf0871210fa389018fe63dbb3c6dcc4}
+      \strng{fullhash}{9cf0871210fa389018fe63dbb3c6dcc4}
+      \strng{fullhashraw}{9cf0871210fa389018fe63dbb3c6dcc4}
+      \strng{bibnamehash}{9cf0871210fa389018fe63dbb3c6dcc4}
+      \strng{authorbibnamehash}{9cf0871210fa389018fe63dbb3c6dcc4}
+      \strng{authornamehash}{9cf0871210fa389018fe63dbb3c6dcc4}
+      \strng{authorfullhash}{9cf0871210fa389018fe63dbb3c6dcc4}
+      \strng{authorfullhashraw}{9cf0871210fa389018fe63dbb3c6dcc4}
+      \field{sortinit}{7}
+      \field{sortinithash}{108d0be1b1bee9773a1173443802c0a3}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{langid}{russian}
+      \field{title}{Photon Quantum Deterministic Simulation Documentation [Электронный ресурс]}
+      \field{urlday}{17}
+      \field{urlmonth}{11}
+      \field{urlyear}{2025}
+      \field{year}{2024}
+      \field{urldateera}{ce}
+      \verb{urlraw}
+      \verb https://doc.photonengine.com
+      \endverb
+      \verb{url}
+      \verb https://doc.photonengine.com
+      \endverb
+    \endentry
+    \entry{claypool2010latency}{article}{}{}
+      \name{author}{2}{}{%
+        {{hash=f4e0c08d7c72b4d7cddc5cbebce39ed8}{%
+           family={Claypool},
+           familyi={C\bibinitperiod},
+           given={Mark},
+           giveni={M\bibinitperiod}}}%
+        {{hash=155585f496a22e48e82a7cc1195f8908}{%
+           family={Claypool},
+           familyi={C\bibinitperiod},
+           given={Kajal},
+           giveni={K\bibinitperiod}}}%
+      }
+      \strng{namehash}{ec82db5f8b6395566baffec66019c3db}
+      \strng{fullhash}{ec82db5f8b6395566baffec66019c3db}
+      \strng{fullhashraw}{ec82db5f8b6395566baffec66019c3db}
+      \strng{bibnamehash}{ec82db5f8b6395566baffec66019c3db}
+      \strng{authorbibnamehash}{ec82db5f8b6395566baffec66019c3db}
+      \strng{authornamehash}{ec82db5f8b6395566baffec66019c3db}
+      \strng{authorfullhash}{ec82db5f8b6395566baffec66019c3db}
+      \strng{authorfullhashraw}{ec82db5f8b6395566baffec66019c3db}
+      \field{sortinit}{8}
+      \field{sortinithash}{a231b008ebf0ecbe0b4d96dcc159445f}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{ACM Computers in Entertainment}
+      \field{langid}{english}
+      \field{title}{Latency Can Kill: Precision and Deadline in Online Games}
+      \field{year}{2006}
+    \endentry
+    \entry{ggpo}{article}{}{}
+      \name{author}{1}{}{%
+        {{hash=bc21ee217fe9ecb009f07287e074127d}{%
+           family={Cannon},
+           familyi={C\bibinitperiod},
+           given={Tony},
+           giveni={T\bibinitperiod}}}%
+      }
+      \strng{namehash}{bc21ee217fe9ecb009f07287e074127d}
+      \strng{fullhash}{bc21ee217fe9ecb009f07287e074127d}
+      \strng{fullhashraw}{bc21ee217fe9ecb009f07287e074127d}
+      \strng{bibnamehash}{bc21ee217fe9ecb009f07287e074127d}
+      \strng{authorbibnamehash}{bc21ee217fe9ecb009f07287e074127d}
+      \strng{authornamehash}{bc21ee217fe9ecb009f07287e074127d}
+      \strng{authorfullhash}{bc21ee217fe9ecb009f07287e074127d}
+      \strng{authorfullhashraw}{bc21ee217fe9ecb009f07287e074127d}
+      \field{sortinit}{9}
+      \field{sortinithash}{0a5ebc79d83c96b6579069544c73c7d4}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Game Developer}
+      \field{langid}{english}
+      \field{title}{Fight the Lag! The Trick Behind GGPO's Low Latency Netcode}
+      \field{year}{2012}
+    \endentry
+    \entry{kurose2013networking}{book}{}{}
+      \name{author}{2}{}{%
+        {{hash=940597b1d3215b2b17b93101036fbb5e}{%
+           family={Kurose},
+           familyi={K\bibinitperiod},
+           given={James\bibnamedelima F.},
+           giveni={J\bibinitperiod\bibinitdelim F\bibinitperiod}}}%
+        {{hash=c2e119f22d4ef9df7cfb63c82975b459}{%
+           family={Ross},
+           familyi={R\bibinitperiod},
+           given={Keith\bibnamedelima W.},
+           giveni={K\bibinitperiod\bibinitdelim W\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {Pearson}%
+      }
+      \strng{namehash}{79b9c386af384b822481cee1fccbb76a}
+      \strng{fullhash}{79b9c386af384b822481cee1fccbb76a}
+      \strng{fullhashraw}{79b9c386af384b822481cee1fccbb76a}
+      \strng{bibnamehash}{79b9c386af384b822481cee1fccbb76a}
+      \strng{authorbibnamehash}{79b9c386af384b822481cee1fccbb76a}
+      \strng{authornamehash}{79b9c386af384b822481cee1fccbb76a}
+      \strng{authorfullhash}{79b9c386af384b822481cee1fccbb76a}
+      \strng{authorfullhashraw}{79b9c386af384b822481cee1fccbb76a}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{langid}{english}
+      \field{title}{Computer Networking: A Top-Down Approach}
+      \field{year}{2013}
+    \endentry
+    \entry{stevens2011tcpip}{book}{}{}
+      \name{author}{2}{}{%
+        {{hash=882cf5ccc1ce0f8a7bfc9d838094d291}{%
+           family={Stevens},
+           familyi={S\bibinitperiod},
+           given={W.\bibnamedelimi Richard},
+           giveni={W\bibinitperiod\bibinitdelim R\bibinitperiod}}}%
+        {{hash=7e2c86820cdae7981e97573f692e14c1}{%
+           family={Fall},
+           familyi={F\bibinitperiod},
+           given={Kevin\bibnamedelima R.},
+           giveni={K\bibinitperiod\bibinitdelim R\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {Addison-Wesley}%
+      }
+      \strng{namehash}{ba448f80fcb786e241d434926c5b8533}
+      \strng{fullhash}{ba448f80fcb786e241d434926c5b8533}
+      \strng{fullhashraw}{ba448f80fcb786e241d434926c5b8533}
+      \strng{bibnamehash}{ba448f80fcb786e241d434926c5b8533}
+      \strng{authorbibnamehash}{ba448f80fcb786e241d434926c5b8533}
+      \strng{authornamehash}{ba448f80fcb786e241d434926c5b8533}
+      \strng{authorfullhash}{ba448f80fcb786e241d434926c5b8533}
+      \strng{authorfullhashraw}{ba448f80fcb786e241d434926c5b8533}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{langid}{english}
+      \field{title}{TCP/IP Illustrated}
+      \field{year}{2011}
+    \endentry
+    \entry{gregory2018gamedev}{book}{}{}
+      \name{author}{1}{}{%
+        {{hash=b97f772b60bfb5bf77251b45263e44dd}{%
+           family={Gregory},
+           familyi={G\bibinitperiod},
+           given={Jason},
+           giveni={J\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {A K Peters / CRC Press}%
+      }
+      \strng{namehash}{b97f772b60bfb5bf77251b45263e44dd}
+      \strng{fullhash}{b97f772b60bfb5bf77251b45263e44dd}
+      \strng{fullhashraw}{b97f772b60bfb5bf77251b45263e44dd}
+      \strng{bibnamehash}{b97f772b60bfb5bf77251b45263e44dd}
+      \strng{authorbibnamehash}{b97f772b60bfb5bf77251b45263e44dd}
+      \strng{authornamehash}{b97f772b60bfb5bf77251b45263e44dd}
+      \strng{authorfullhash}{b97f772b60bfb5bf77251b45263e44dd}
+      \strng{authorfullhashraw}{b97f772b60bfb5bf77251b45263e44dd}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{edition}{3}
+      \field{langid}{english}
+      \field{title}{Game Engine Architecture}
+      \field{year}{2018}
+    \endentry
+    \entry{pantel2002lag}{article}{}{}
+      \name{author}{2}{}{%
+        {{hash=3832fbebbf85f38339ab4febebb4b4cd}{%
+           family={Pantel},
+           familyi={P\bibinitperiod},
+           given={Andreas},
+           giveni={A\bibinitperiod}}}%
+        {{hash=8413d1eccce652d96c2316dedaf2b6ff}{%
+           family={Wolf},
+           familyi={W\bibinitperiod},
+           given={Lars\bibnamedelima C.},
+           giveni={L\bibinitperiod\bibinitdelim C\bibinitperiod}}}%
+      }
+      \strng{namehash}{0c0ce67eff3b649f1701e21436b20ad3}
+      \strng{fullhash}{0c0ce67eff3b649f1701e21436b20ad3}
+      \strng{fullhashraw}{0c0ce67eff3b649f1701e21436b20ad3}
+      \strng{bibnamehash}{0c0ce67eff3b649f1701e21436b20ad3}
+      \strng{authorbibnamehash}{0c0ce67eff3b649f1701e21436b20ad3}
+      \strng{authornamehash}{0c0ce67eff3b649f1701e21436b20ad3}
+      \strng{authorfullhash}{0c0ce67eff3b649f1701e21436b20ad3}
+      \strng{authorfullhashraw}{0c0ce67eff3b649f1701e21436b20ad3}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Proceedings of NOSSDAV}
+      \field{langid}{english}
+      \field{title}{On the Impact of Delay on Real-Time Multiplayer Games}
+      \field{year}{2002}
+    \endentry
+    \entry{gamenetpatterns}{misc}{}{}
+      \name{author}{1}{}{%
+        {{hash=1cf0f11213db40d088c94d74a6cb71b3}{%
+           family={Gambetta},
+           familyi={G\bibinitperiod},
+           given={Gabriel},
+           giveni={G\bibinitperiod}}}%
+      }
+      \strng{namehash}{1cf0f11213db40d088c94d74a6cb71b3}
+      \strng{fullhash}{1cf0f11213db40d088c94d74a6cb71b3}
+      \strng{fullhashraw}{1cf0f11213db40d088c94d74a6cb71b3}
+      \strng{bibnamehash}{1cf0f11213db40d088c94d74a6cb71b3}
+      \strng{authorbibnamehash}{1cf0f11213db40d088c94d74a6cb71b3}
+      \strng{authornamehash}{1cf0f11213db40d088c94d74a6cb71b3}
+      \strng{authorfullhash}{1cf0f11213db40d088c94d74a6cb71b3}
+      \strng{authorfullhashraw}{1cf0f11213db40d088c94d74a6cb71b3}
+      \field{extraname}{2}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{langid}{russian}
+      \field{title}{Fast-Paced Multiplayer (Part IV): Lag Compensation [Электронный ресурс]}
+      \field{urlday}{17}
+      \field{urlmonth}{11}
+      \field{urlyear}{2025}
+      \field{urldateera}{ce}
+      \verb{urlraw}
+      \verb https://www.gabrielgambetta.com/lag-compensation.html
+      \endverb
+      \verb{url}
+      \verb https://www.gabrielgambetta.com/lag-compensation.html
+      \endverb
+    \endentry
+    \entry{unity_monobehaviour}{online}{}{}
+      \list{language}{1}{%
+        {russian}%
+      }
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labeltitlesource}{title}
+      \field{note}{Режим доступа URL: \url{https://docs.unity3d.com/ScriptReference/MonoBehaviour.html} (Дата обращения: 13.05.2026)}
+      \field{title}{MonoBehaviour [Электронный ресурс]}
+    \endentry
+    \entry{csharp_reference}{online}{}{}
+      \list{language}{1}{%
+        {russian}%
+      }
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labeltitlesource}{title}
+      \field{note}{Режим доступа URL: \url{https://learn.microsoft.com/ru-ru/dotnet/csharp/} (Дата обращения: 13.05.2026)}
+      \field{title}{Документация по C\# [Электронный ресурс]}
+    \endentry
+    \entry{dotnet_udpclient}{online}{}{}
+      \list{language}{1}{%
+        {russian}%
+      }
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labeltitlesource}{title}
+      \field{note}{Режим доступа URL: \url{https://learn.microsoft.com/ru-ru/dotnet/api/system.net.sockets.udpclient} (Дата обращения: 13.05.2026)}
+      \field{title}{UdpClient Class [Электронный ресурс]}
+    \endentry
+  \enddatalist
+\endrefsection
+\endinput
+

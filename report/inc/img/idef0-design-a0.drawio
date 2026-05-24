@@ -1,0 +1,139 @@
+<mxfile host="Electron" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/29.6.1 Chrome/142.0.7444.265 Electron/39.8.0 Safari/537.36" version="29.6.1">
+  <diagram id="idef0-design-a0-context" name="A0">
+    <mxGraphModel dx="2066" dy="1201" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1900" pageHeight="1000" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="a0" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;strokeWidth=2;fontSize=24;fontStyle=1;align=center;verticalAlign=middle;spacing=10" value="Обеспечить согласованность&lt;br&gt;состояний двух асинхронных игроков" vertex="1">
+          <mxGeometry height="260" width="520" x="690" y="390" as="geometry" />
+        </mxCell>
+        <mxCell id="in_evt_label" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=20" value="Действия игроков и игровые события EVT" vertex="1">
+          <mxGeometry height="32" width="520" x="35" y="373" as="geometry" />
+        </mxCell>
+        <mxCell id="in_state_label" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=20" value="Текущее состояние игроков S_PLAYERS" vertex="1">
+          <mxGeometry height="32" width="520" x="35" y="480" as="geometry" />
+        </mxCell>
+        <mxCell id="in_msg_label" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=20" value="Входящие UDP-сообщения MSG_IN" vertex="1">
+          <mxGeometry height="32" width="500" x="35" y="600" as="geometry" />
+        </mxCell>
+        <mxCell id="ctrl_sync_label" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;fontSize=20" value="Правила согласования&lt;br&gt;состояний&amp;nbsp;&lt;div&gt;R_SYNC&lt;/div&gt;" vertex="1">
+          <mxGeometry height="70" width="300" x="590" y="120" as="geometry" />
+        </mxCell>
+        <mxCell id="ctrl_fa_label" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;fontSize=20" value="Модель конечных&lt;br&gt;автоматов&amp;nbsp;&lt;div&gt;FA_MODEL&lt;/div&gt;" vertex="1">
+          <mxGeometry height="70" width="260" x="820" y="120" as="geometry" />
+        </mxCell>
+        <mxCell id="ctrl_net_label" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;fontSize=20" value="Ограничения UDP-сетевого&lt;br&gt;обмена&amp;nbsp;&lt;div&gt;NET_LIMITS&lt;/div&gt;" vertex="1">
+          <mxGeometry height="70" width="330" x="1020" y="120" as="geometry" />
+        </mxCell>
+        <mxCell id="mech_msg_label" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;fontSize=20" value="Инфраструктура обмена&lt;br&gt;сообщениями&amp;nbsp;&lt;div&gt;MSG_SYS&lt;/div&gt;" vertex="1">
+          <mxGeometry height="70" width="330" x="535" y="815" as="geometry" />
+        </mxCell>
+        <mxCell id="mech_clients_label" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;fontSize=20" value="Клиентские&amp;nbsp;&lt;div&gt;приложения&lt;br&gt;CLIENTS&lt;/div&gt;" vertex="1">
+          <mxGeometry height="80" width="200" x="800" y="810" as="geometry" />
+        </mxCell>
+        <mxCell id="mech_server_label" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;fontSize=20" value="Серверная&amp;nbsp;&lt;div&gt;логика&lt;br&gt;SERVER&lt;/div&gt;" vertex="1">
+          <mxGeometry height="70" width="220" x="930" y="815" as="geometry" />
+        </mxCell>
+        <mxCell id="mech_logs_label" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;fontSize=20" value="Журналы&amp;nbsp;&lt;div&gt;событий&lt;br&gt;EVENT_LOGS&lt;/div&gt;" vertex="1">
+          <mxGeometry height="70" width="270" x="1050" y="815" as="geometry" />
+        </mxCell>
+        <mxCell id="out_sync_label" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=right;verticalAlign=middle;fontSize=20" value="Согласованные состояния игроков SYNC_ST" vertex="1">
+          <mxGeometry height="32" width="555" x="1290" y="370" as="geometry" />
+        </mxCell>
+        <mxCell id="out_fa_label" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=right;verticalAlign=middle;fontSize=20" value="Обновленные состояния конечных автоматов FA_ST" vertex="1">
+          <mxGeometry height="32" width="605" x="1240" y="444" as="geometry" />
+        </mxCell>
+        <mxCell id="out_ack_label" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=right;verticalAlign=middle;fontSize=20" value="Подтверждения обработки событий ACK" vertex="1">
+          <mxGeometry height="32" width="455" x="1387.5" y="520" as="geometry" />
+        </mxCell>
+        <mxCell id="out_rej_label" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=right;verticalAlign=middle;fontSize=20" value="Отклоненные некорректные и устаревшие события REJ_EVT" vertex="1">
+          <mxGeometry height="32" width="650" x="1195" y="590" as="geometry" />
+        </mxCell>
+        <mxCell id="e_in_evt" edge="1" parent="1" style="endArrow=block;html=1;rounded=0;strokeWidth=2;endFill=1;edgeStyle=orthogonalEdgeStyle;" value="">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="20" y="405" as="sourcePoint" />
+            <mxPoint x="690" y="405" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e_in_state" edge="1" parent="1" style="endArrow=block;html=1;rounded=0;strokeWidth=2;endFill=1;edgeStyle=orthogonalEdgeStyle;" value="">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="20" y="509" as="sourcePoint" />
+            <mxPoint x="690" y="509" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e_in_msg" edge="1" parent="1" style="endArrow=block;html=1;rounded=0;strokeWidth=2;endFill=1;edgeStyle=orthogonalEdgeStyle;" value="">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="20" y="635" as="sourcePoint" />
+            <mxPoint x="690" y="635" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e_ctrl_sync" edge="1" parent="1" style="endArrow=block;html=1;rounded=0;strokeWidth=2;endFill=1;edgeStyle=orthogonalEdgeStyle;" value="">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="739.5" y="200" as="sourcePoint" />
+            <mxPoint x="739.5" y="390" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e_ctrl_fa" edge="1" parent="1" style="endArrow=block;html=1;rounded=0;strokeWidth=2;endFill=1;edgeStyle=orthogonalEdgeStyle;" value="">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="950" y="200" as="sourcePoint" />
+            <mxPoint x="950" y="390" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e_ctrl_net" edge="1" parent="1" style="endArrow=block;html=1;rounded=0;strokeWidth=2;endFill=1;edgeStyle=orthogonalEdgeStyle;" value="">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1180" y="200" as="sourcePoint" />
+            <mxPoint x="1180" y="390" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e_mech_msg" edge="1" parent="1" style="endArrow=block;html=1;rounded=0;strokeWidth=2;endFill=1;edgeStyle=orthogonalEdgeStyle;" value="">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="740" y="800" as="sourcePoint" />
+            <mxPoint x="740" y="650" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e_mech_clients" edge="1" parent="1" style="endArrow=block;html=1;rounded=0;strokeWidth=2;endFill=1;edgeStyle=orthogonalEdgeStyle;" value="">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="899.5" y="800" as="sourcePoint" />
+            <mxPoint x="899.5" y="650" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e_mech_server" edge="1" parent="1" style="endArrow=block;html=1;rounded=0;strokeWidth=2;endFill=1;edgeStyle=orthogonalEdgeStyle;" value="">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1040" y="800" as="sourcePoint" />
+            <mxPoint x="1040" y="650" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e_mech_logs" edge="1" parent="1" style="endArrow=block;html=1;rounded=0;strokeWidth=2;endFill=1;edgeStyle=orthogonalEdgeStyle;" value="">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1170" y="800" as="sourcePoint" />
+            <mxPoint x="1170" y="650" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e_out_sync" edge="1" parent="1" style="endArrow=block;html=1;rounded=0;strokeWidth=2;endFill=1;edgeStyle=orthogonalEdgeStyle;" value="">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1210" y="410" as="sourcePoint" />
+            <mxPoint x="1880" y="410" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e_out_fa" edge="1" parent="1" style="endArrow=block;html=1;rounded=0;strokeWidth=2;endFill=1;edgeStyle=orthogonalEdgeStyle;" value="">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1210" y="479" as="sourcePoint" />
+            <mxPoint x="1880" y="479" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e_out_ack" edge="1" parent="1" style="endArrow=block;html=1;rounded=0;strokeWidth=2;endFill=1;edgeStyle=orthogonalEdgeStyle;" value="">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1207.5" y="550" as="sourcePoint" />
+            <mxPoint x="1877.5" y="550" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e_out_rej" edge="1" parent="1" style="endArrow=block;html=1;rounded=0;strokeWidth=2;endFill=1;edgeStyle=orthogonalEdgeStyle;" value="">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1210" y="625" as="sourcePoint" />
+            <mxPoint x="1880" y="625" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

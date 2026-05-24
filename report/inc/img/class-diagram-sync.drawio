@@ -1,0 +1,146 @@
+<mxfile host="Electron" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/29.6.1 Chrome/142.0.7444.265 Electron/39.8.0 Safari/537.36" version="29.6.1">
+  <diagram id="class-diagram-sync" name="Диаграмма классов">
+    <mxGraphModel dx="2066" dy="1201" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1950" pageHeight="1400" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="title" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;fontSize=24;fontStyle=1" value="Диаграмма классов программной реализации метода синхронизации" vertex="1">
+          <mxGeometry height="40" width="1130" x="410" y="25" as="geometry" />
+        </mxCell>
+        <mxCell id="udp" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;strokeWidth=2;fontSize=15;align=left;verticalAlign=top;spacing=8" value="&lt;b&gt;UdpEventTransport&lt;/b&gt;&lt;br&gt;&lt;i&gt;MonoBehaviour&lt;/i&gt;&lt;hr&gt;+ Instance: UdpEventTransport&lt;br&gt;+ role: NetworkRole&lt;br&gt;+ serverIp: string&lt;br&gt;+ serverPort: int&lt;br&gt;+ clientPort: int&lt;br&gt;+ outgoingPacketLossChance: float&lt;br&gt;+ artificialLatencyMs: float&lt;br&gt;+ jitterMs: float&lt;br&gt;+ duplicatePacketChance: float&lt;br&gt;- receivedMessages: Queue&amp;lt;NetworkMessage&amp;gt;&lt;hr&gt;+ StartTransport(): void&lt;br&gt;+ StopTransport(): void&lt;br&gt;+ SendNetworkMessage(message): void&lt;br&gt;- ReceiveLoop(): void" vertex="1">
+          <mxGeometry height="340" width="380" x="70" y="120" as="geometry" />
+        </mxCell>
+        <mxCell id="network_message" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;strokeWidth=2;fontSize=15;align=left;verticalAlign=top;spacing=8" value="&lt;b&gt;NetworkMessage&lt;/b&gt;&lt;br&gt;&lt;i&gt;Serializable&lt;/i&gt;&lt;hr&gt;+ messageType: NetworkMessageType&lt;br&gt;+ puzzleEvent: PuzzleEvent&lt;br&gt;+ ackForEventId: int&lt;br&gt;+ senderPlayerId: string&lt;br&gt;+ targetPlayerId: string&lt;hr&gt;+ CreateClientHelloMessage(playerId): NetworkMessage&lt;br&gt;+ CreatePuzzleEventMessage(puzzleEvent): NetworkMessage&lt;br&gt;+ CreateAcknowledgementMessage(eventId, targetPlayerId): NetworkMessage" vertex="1">
+          <mxGeometry height="270" width="420" x="620" y="120" as="geometry" />
+        </mxCell>
+        <mxCell id="puzzle_event" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;strokeWidth=2;fontSize=15;align=left;verticalAlign=top;spacing=8" value="&lt;b&gt;PuzzleEvent&lt;/b&gt;&lt;br&gt;&lt;i&gt;Serializable&lt;/i&gt;&lt;hr&gt;+ eventId: int&lt;br&gt;+ sequenceNumber: int&lt;br&gt;+ sourcePlayerId: string&lt;br&gt;+ sourceObjectId: string&lt;br&gt;+ targetObjectId: string&lt;br&gt;+ eventType: PuzzleEventType&lt;hr&gt;+ PuzzleEvent(eventId, sequenceNumber,&lt;br&gt;&amp;nbsp;&amp;nbsp;sourcePlayerId, sourceObjectId,&lt;br&gt;&amp;nbsp;&amp;nbsp;targetObjectId, eventType)" vertex="1">
+          <mxGeometry height="250" width="390" x="1210" y="120" as="geometry" />
+        </mxCell>
+        <mxCell id="manager" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;strokeWidth=2.5;fontSize=15;align=left;verticalAlign=top;spacing=8" value="&lt;b&gt;EventFsmSyncManager&lt;/b&gt;&lt;br&gt;&lt;i&gt;MonoBehaviour&lt;/i&gt;&lt;hr&gt;+ Instance: EventFsmSyncManager&lt;br&gt;+ role: NetworkRole&lt;br&gt;+ localPlayerId: string&lt;br&gt;+ resendDelay: float&lt;br&gt;- registeredObjects: Dictionary&amp;lt;string, IFsmPuzzleObject&amp;gt;&lt;br&gt;- appliedEventKeys: HashSet&amp;lt;string&amp;gt;&lt;br&gt;- pendingEvents: Dictionary&amp;lt;int, PuzzleEvent&amp;gt;&lt;br&gt;- expectedSequenceByPlayer: Dictionary&amp;lt;string, int&amp;gt;&lt;br&gt;- nextEventId: int&lt;br&gt;- nextSequenceNumber: int&lt;hr&gt;+ RegisterObject(puzzleObject): void&lt;br&gt;+ CreateAndSendEvent(sourceObjectId, targetObjectId, eventType): void&lt;br&gt;+ OnNetworkMessageReceived(message): void&lt;br&gt;+ BroadcastServerGeneratedEvent(sourceObjectId, targetObjectId, eventType): void&lt;br&gt;- HandlePuzzleEventOnServer(puzzleEvent): void&lt;br&gt;- HandleAcknowledgement(message): void&lt;br&gt;- ApplyEventToFsm(puzzleEvent): bool" vertex="1">
+          <mxGeometry height="410" width="600" x="560" y="520" as="geometry" />
+        </mxCell>
+        <mxCell id="ifsm" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;strokeWidth=2;fontSize=16;align=left;verticalAlign=top;spacing=8" value="&lt;b&gt;&amp;lt;&amp;lt;interface&amp;gt;&amp;gt;&lt;br&gt;IFsmPuzzleObject&lt;/b&gt;&lt;hr&gt;+ ObjectId: string&lt;br&gt;+ ApplyPuzzleEvent(puzzleEvent): bool" vertex="1">
+          <mxGeometry height="135" width="330" x="1290" y="560" as="geometry" />
+        </mxCell>
+        <mxCell id="research" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;strokeWidth=2;fontSize=15;align=left;verticalAlign=top;spacing=8" value="&lt;b&gt;ResearchMetrics&lt;/b&gt;&lt;br&gt;&lt;i&gt;MonoBehaviour&lt;/i&gt;&lt;hr&gt;+ Instance: ResearchMetrics&lt;br&gt;+ sentMessages: int&lt;br&gt;+ lostPackets: int&lt;br&gt;+ resendCount: int&lt;br&gt;+ duplicateRejected: int&lt;br&gt;+ wrongOrderRejected: int&lt;br&gt;+ appliedEvents: int&lt;br&gt;- eventCreateTimes: Dictionary&amp;lt;int, float&amp;gt;&lt;br&gt;- ackTimes: List&amp;lt;float&amp;gt;&lt;hr&gt;+ RegisterSentMessage(): void&lt;br&gt;+ RegisterPacketLoss(): void&lt;br&gt;+ RegisterResend(): void&lt;br&gt;+ RegisterDuplicateRejected(): void&lt;br&gt;+ RegisterWrongOrderRejected(): void&lt;br&gt;+ RegisterAppliedEvent(): void&lt;br&gt;+ RegisterCreatedEvent(eventId): void&lt;br&gt;+ RegisterAck(eventId): void&lt;br&gt;+ GetAverageAckTime(): float" vertex="1">
+          <mxGeometry height="410" width="390" x="40" y="560" as="geometry" />
+        </mxCell>
+        <mxCell id="door" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;strokeWidth=2;fontSize=15;align=left;verticalAlign=top;spacing=8" value="&lt;b&gt;PuzzleDoor&lt;/b&gt;&lt;br&gt;&lt;i&gt;MonoBehaviour&lt;/i&gt;&lt;hr&gt;+ objectId: string&lt;hr&gt;+ ObjectId: string&lt;br&gt;+ ApplyPuzzleEvent(puzzleEvent): bool" vertex="1">
+          <mxGeometry height="150" width="350" x="80" y="1040" as="geometry" />
+        </mxCell>
+        <mxCell id="bridge" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;strokeWidth=2;fontSize=15;align=left;verticalAlign=top;spacing=8" value="&lt;b&gt;ToggleBridge&lt;/b&gt;&lt;br&gt;&lt;i&gt;MonoBehaviour&lt;/i&gt;&lt;hr&gt;+ objectId: string&lt;hr&gt;+ ObjectId: string&lt;br&gt;+ ApplyPuzzleEvent(puzzleEvent): bool" vertex="1">
+          <mxGeometry height="150" width="350" x="500" y="1040" as="geometry" />
+        </mxCell>
+        <mxCell id="coop" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;strokeWidth=2;fontSize=15;align=left;verticalAlign=top;spacing=8" value="&lt;b&gt;CoopHoldPuzzleController&lt;/b&gt;&lt;br&gt;&lt;i&gt;MonoBehaviour&lt;/i&gt;&lt;hr&gt;+ objectId: string&lt;hr&gt;+ ObjectId: string&lt;br&gt;+ ApplyPuzzleEvent(puzzleEvent): bool" vertex="1">
+          <mxGeometry height="150" width="390" x="920" y="1040" as="geometry" />
+        </mxCell>
+        <mxCell id="color" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;strokeWidth=2;fontSize=15;align=left;verticalAlign=top;spacing=8" value="&lt;b&gt;ColorSequenceController&lt;/b&gt;&lt;br&gt;&lt;i&gt;MonoBehaviour&lt;/i&gt;&lt;hr&gt;+ objectId: string&lt;hr&gt;+ ObjectId: string&lt;br&gt;+ ApplyPuzzleEvent(puzzleEvent): bool" vertex="1">
+          <mxGeometry height="150" width="400" x="1380" y="1040" as="geometry" />
+        </mxCell>
+        <mxCell id="e_udp_network_message" edge="1" parent="1" source="udp" style="endArrow=open;html=1;rounded=0;strokeWidth=2;edgeStyle=orthogonalEdgeStyle;labelBackgroundColor=#ffffff;fontSize=14" target="network_message" value="отправляет и принимает">
+          <mxGeometry relative="1" x="0.1707" y="30" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e_network_puzzle" edge="1" parent="1" source="network_message" style="endArrow=open;startArrow=none;startFill=0;html=1;rounded=0;strokeWidth=2;edgeStyle=orthogonalEdgeStyle;labelBackgroundColor=#ffffff;fontSize=14" target="puzzle_event" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1170" y="250" />
+              <mxPoint x="1170" y="250" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e_transport_manager" edge="1" parent="1" source="udp" style="endArrow=open;html=1;rounded=0;strokeWidth=2;edgeStyle=orthogonalEdgeStyle;labelBackgroundColor=#ffffff;fontSize=14" target="manager" value="передает входящие сообщения">
+          <mxGeometry relative="1" x="-0.5455" y="-20" as="geometry">
+            <mxPoint as="offset" />
+            <Array as="points">
+              <mxPoint x="330" y="490" />
+              <mxPoint x="700" y="490" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e_manager_transport" edge="1" parent="1" source="manager" style="endArrow=open;html=1;rounded=0;strokeWidth=2;edgeStyle=orthogonalEdgeStyle;labelBackgroundColor=#ffffff;fontSize=14" target="udp" value="отправляет NetworkMessage">
+          <mxGeometry relative="1" x="0.2821" y="-100" as="geometry">
+            <mxPoint as="offset" />
+            <Array as="points">
+              <mxPoint x="560" y="610" />
+              <mxPoint x="500" y="610" />
+              <mxPoint x="500" y="330" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e_manager_message" edge="1" parent="1" source="manager" style="endArrow=open;html=1;rounded=0;strokeWidth=2;edgeStyle=orthogonalEdgeStyle;labelBackgroundColor=#ffffff;fontSize=14" target="network_message" value="создает и обрабатывает">
+          <mxGeometry relative="1" x="-0.1429" y="-90" as="geometry">
+            <mxPoint as="offset" />
+            <Array as="points">
+              <mxPoint x="830" y="480" />
+              <mxPoint x="830" y="480" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e_manager_event" edge="1" parent="1" source="manager" style="endArrow=open;html=1;rounded=0;strokeWidth=2;edgeStyle=orthogonalEdgeStyle;labelBackgroundColor=#ffffff;fontSize=14" target="puzzle_event" value="создает, хранит и применяет">
+          <mxGeometry relative="1" x="-0.1828" y="30" as="geometry">
+            <mxPoint as="offset" />
+            <Array as="points">
+              <mxPoint x="1090" y="480" />
+              <mxPoint x="1405" y="480" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e_manager_ifsm" edge="1" parent="1" source="manager" style="endArrow=open;startArrow=none;startFill=0;html=1;rounded=0;strokeWidth=2;edgeStyle=orthogonalEdgeStyle;labelBackgroundColor=#ffffff;fontSize=14" target="ifsm" value="&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_udp_metrics" edge="1" parent="1" source="udp" style="endArrow=open;html=1;rounded=0;strokeWidth=2;edgeStyle=orthogonalEdgeStyle;labelBackgroundColor=#ffffff;fontSize=14" target="research" value="сетевые метрики">
+          <mxGeometry relative="1" x="-0.1304" y="-70" as="geometry">
+            <mxPoint as="offset" />
+            <Array as="points">
+              <mxPoint x="260" y="530" />
+              <mxPoint x="260" y="530" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e_manager_metrics" edge="1" parent="1" source="manager" style="endArrow=open;html=1;rounded=0;strokeWidth=2;edgeStyle=orthogonalEdgeStyle;labelBackgroundColor=#ffffff;fontSize=14" target="research" value="метрики&amp;nbsp;&lt;div&gt;синхронизации&lt;/div&gt;">
+          <mxGeometry relative="1" x="-0.0769" y="35" as="geometry">
+            <mxPoint as="offset" />
+            <Array as="points">
+              <mxPoint x="530" y="745" />
+              <mxPoint x="530" y="745" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e_door_ifsm" edge="1" parent="1" source="door" style="endArrow=block;endFill=0;html=1;dashed=1;rounded=0;strokeWidth=2;edgeStyle=orthogonalEdgeStyle" target="ifsm" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="255" y="990" />
+              <mxPoint x="1455" y="990" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e_bridge_ifsm" edge="1" parent="1" source="bridge" style="endArrow=block;endFill=0;html=1;dashed=1;rounded=0;strokeWidth=2;edgeStyle=orthogonalEdgeStyle" target="ifsm" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="675" y="990" />
+              <mxPoint x="1455" y="990" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e_coop_ifsm" edge="1" parent="1" source="coop" style="endArrow=block;endFill=0;html=1;dashed=1;rounded=0;strokeWidth=2;edgeStyle=orthogonalEdgeStyle" target="ifsm" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1115" y="990" />
+              <mxPoint x="1455" y="990" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e_color_ifsm" edge="1" parent="1" source="color" style="endArrow=block;endFill=0;html=1;dashed=1;rounded=0;strokeWidth=2;edgeStyle=orthogonalEdgeStyle" target="ifsm" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1580" y="990" />
+              <mxPoint x="1455" y="990" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

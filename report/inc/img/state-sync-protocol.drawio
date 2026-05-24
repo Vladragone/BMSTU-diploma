@@ -1,0 +1,204 @@
+<mxfile host="Electron" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/29.6.1 Chrome/142.0.7444.265 Electron/39.8.0 Safari/537.36" version="29.6.1">
+  <diagram id="state-sync-protocol" name="Диаграмма состояний">
+    <mxGraphModel dx="2431" dy="1413" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="2200" pageHeight="1250" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="server_lane" parent="1" style="swimlane;html=1;startSize=42;horizontal=1;fillColor=#fafafa;strokeColor=#666666;fontSize=20;fontStyle=1" value="Авторитетная сторона" vertex="1">
+          <mxGeometry height="1060" width="1030" x="1123" y="90" as="geometry" />
+        </mxCell>
+        <mxCell id="lbl_sent" parent="server_lane" style="text;html=1;strokeColor=none;fillColor=#ffffff;align=center;verticalAlign=middle;fontSize=20;fontStyle=1" value="результат&amp;nbsp;&lt;div&gt;разослан&lt;/div&gt;" vertex="1">
+          <mxGeometry height="24" width="145" x="37" y="580" as="geometry" />
+        </mxCell>
+        <mxCell id="lbl_order" parent="server_lane" style="text;html=1;strokeColor=none;fillColor=#ffffff;align=center;verticalAlign=middle;fontSize=20;fontStyle=1" value="&lt;div&gt;&lt;div&gt;нарушение порядка&amp;nbsp;&lt;/div&gt;&lt;div&gt;или&lt;/div&gt;&lt;div&gt;&amp;nbsp;недопустимый&amp;nbsp;&lt;/div&gt;&lt;div&gt;переход&lt;/div&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="24" width="280" x="397" y="280" as="geometry" />
+        </mxCell>
+        <mxCell id="e_broadcast_wait" edge="1" parent="server_lane" style="endArrow=block;html=1;rounded=0;strokeWidth=2;endFill=1;edgeStyle=orthogonalEdgeStyle;curved=0;fontStyle=1;fontSize=20;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="server_wait" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="40" y="820" />
+              <mxPoint x="40" y="105" />
+            </Array>
+            <mxPoint x="130" y="820" as="sourcePoint" />
+            <mxPoint x="130" y="80" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e_broadcast_ack" edge="1" parent="server_lane" style="endArrow=block;html=1;rounded=0;strokeWidth=2;endFill=1;edgeStyle=orthogonalEdgeStyle;curved=0;entryX=1;entryY=0.75;entryDx=0;entryDy=0;fontStyle=1;fontSize=20;" target="wait_ack" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="-80" y="840" />
+              <mxPoint x="-80" y="548" />
+            </Array>
+            <mxPoint x="150" y="840" as="sourcePoint" />
+            <mxPoint x="-220" y="550" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="lbl_server_recv" parent="server_lane" style="text;html=1;strokeColor=none;fillColor=#ffffff;align=center;verticalAlign=middle;fontSize=20;fontStyle=1" value="получение PuzzleEvent" vertex="1">
+          <mxGeometry height="24" width="155" x="297" y="180" as="geometry" />
+        </mxCell>
+        <mxCell id="client_lane" parent="server_lane" style="swimlane;html=1;startSize=42;horizontal=1;fillColor=#fafafa;strokeColor=#666666;fontSize=20;fontStyle=1" value="Клиентская сторона" vertex="1">
+          <mxGeometry height="1060" width="1100" x="-1100" as="geometry" />
+        </mxCell>
+        <mxCell id="lbl_resend" parent="client_lane" style="text;html=1;strokeColor=none;fillColor=#ffffff;align=center;verticalAlign=middle;fontSize=20;fontStyle=1" value="повторная&amp;nbsp;&lt;div&gt;отправка&amp;nbsp;&lt;div&gt;PuzzleEvent&lt;/div&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="24" width="220" x="360" y="570" as="geometry" />
+        </mxCell>
+        <mxCell id="wait_ack" parent="client_lane" style="rounded=1;whiteSpace=wrap;html=1;arcSize=18;fillColor=#ffffff;strokeColor=#000000;strokeWidth=2;fontSize=20;fontStyle=1;align=center;verticalAlign=middle" value="Ожидание&lt;br&gt;подтверждения" vertex="1">
+          <mxGeometry height="90" width="240" x="560" y="480" as="geometry" />
+        </mxCell>
+        <mxCell id="e_form_waitack" edge="1" parent="client_lane" style="endArrow=block;html=1;rounded=0;strokeWidth=2;endFill=1;edgeStyle=orthogonalEdgeStyle;curved=0;fontStyle=1;fontSize=20;" value="">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="680" y="345" as="sourcePoint" />
+            <mxPoint x="680" y="480" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="lbl_client_to_server" parent="client_lane" style="text;html=1;strokeColor=none;fillColor=#ffffff;align=center;verticalAlign=middle;fontSize=20;fontStyle=1" value="передача&amp;nbsp;&lt;div&gt;PuzzleEvent&lt;/div&gt;" vertex="1">
+          <mxGeometry height="24" width="133" x="957" y="250" as="geometry" />
+        </mxCell>
+        <mxCell id="lbl_register_done" parent="client_lane" style="text;html=1;strokeColor=none;fillColor=#ffffff;align=center;verticalAlign=middle;fontSize=20;fontStyle=1" value="регистрация&amp;nbsp;&lt;div&gt;выполнена&lt;/div&gt;" vertex="1">
+          <mxGeometry height="24" width="140" x="440" y="70" as="geometry" />
+        </mxCell>
+        <mxCell id="lbl_confirmed_event" parent="client_lane" style="text;html=1;strokeColor=none;fillColor=#ffffff;align=center;verticalAlign=middle;fontSize=20;fontStyle=1" value="передача подтвержденного&amp;nbsp;&lt;div&gt;PuzzleEvent&lt;/div&gt;" vertex="1">
+          <mxGeometry height="24" width="260" x="830" y="900" as="geometry" />
+        </mxCell>
+        <mxCell id="resend" parent="client_lane" style="rounded=1;whiteSpace=wrap;html=1;arcSize=18;fillColor=#ffffff;strokeColor=#000000;strokeWidth=2;fontSize=20;fontStyle=1;align=center;verticalAlign=middle" value="Повторная&lt;br&gt;отправка&lt;br&gt;события" vertex="1">
+          <mxGeometry height="90" width="240" x="130" y="480" as="geometry" />
+        </mxCell>
+        <mxCell id="lbl_timeout" parent="client_lane" style="text;html=1;strokeColor=none;fillColor=#ffffff;align=center;verticalAlign=middle;fontSize=20;fontStyle=1" value="истечение&amp;nbsp;&lt;div&gt;тайм-аута&lt;/div&gt;" vertex="1">
+          <mxGeometry height="24" width="150" x="390" y="466" as="geometry" />
+        </mxCell>
+        <mxCell id="e_apply_wait" edge="1" parent="client_lane" style="endArrow=block;html=1;rounded=0;strokeWidth=2;endFill=1;edgeStyle=orthogonalEdgeStyle;curved=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;fontStyle=1;fontSize=20;" target="wait_event" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="120" y="845" />
+              <mxPoint x="120" y="200" />
+              <mxPoint x="500" y="200" />
+              <mxPoint x="500" y="105" />
+            </Array>
+            <mxPoint x="540" y="845" as="sourcePoint" />
+            <mxPoint x="540" y="105" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="lbl_applied" parent="client_lane" style="text;html=1;strokeColor=none;fillColor=#ffffff;align=center;verticalAlign=middle;fontSize=20;fontStyle=1" value="событие применено" vertex="1">
+          <mxGeometry height="24" width="145" x="350" y="810" as="geometry" />
+        </mxCell>
+        <mxCell id="lbl_local_action" parent="client_lane" style="text;html=1;strokeColor=none;fillColor=#ffffff;align=center;verticalAlign=middle;fontSize=20;fontStyle=1" value="локальное действие" vertex="1">
+          <mxGeometry height="24" width="140" x="580" y="180" as="geometry" />
+        </mxCell>
+        <mxCell id="ZdWlHtu7BFhUoDBRUqhY-1" edge="1" parent="client_lane" source="resend" style="endArrow=block;html=1;rounded=0;strokeWidth=2;endFill=1;edgeStyle=orthogonalEdgeStyle;curved=0;exitX=1;exitY=0.75;exitDx=0;exitDy=0;entryX=0;entryY=0.75;entryDx=0;entryDy=0;fontStyle=1;fontSize=20;" target="wait_ack" value="">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="400" y="660" as="sourcePoint" />
+            <mxPoint x="400" y="795" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="ZdWlHtu7BFhUoDBRUqhY-2" edge="1" parent="client_lane" source="wait_ack" style="endArrow=block;html=1;rounded=0;strokeWidth=2;endFill=1;edgeStyle=orthogonalEdgeStyle;curved=0;exitX=0.004;exitY=0.356;exitDx=0;exitDy=0;exitPerimeter=0;fontStyle=1;fontSize=20;" value="">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="460" y="360" as="sourcePoint" />
+            <mxPoint x="370" y="512" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="lbl_ack_return" parent="client_lane" style="text;html=1;strokeColor=none;fillColor=#ffffff;align=center;verticalAlign=middle;fontSize=20;fontStyle=1" value="получение&amp;nbsp;&lt;div&gt;Acknowledgement&lt;/div&gt;" vertex="1">
+          <mxGeometry height="24" width="190" x="807" y="490" as="geometry" />
+        </mxCell>
+        <mxCell id="e_broadcast_apply" edge="1" parent="client_lane" source="broadcast" style="endArrow=block;html=1;rounded=0;strokeWidth=2;endFill=1;edgeStyle=orthogonalEdgeStyle;curved=0;exitX=0;exitY=0.75;exitDx=0;exitDy=0;fontStyle=1;fontSize=20;" value="">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1150" y="874" as="sourcePoint" />
+            <mxPoint x="800" y="874" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="apply_client" parent="client_lane" style="rounded=1;whiteSpace=wrap;html=1;arcSize=18;fillColor=#ffffff;strokeColor=#000000;strokeWidth=2;fontSize=20;fontStyle=1;align=center;verticalAlign=middle" value="Применение&lt;br&gt;подтвержденного&lt;br&gt;события клиентом" vertex="1">
+          <mxGeometry height="105" width="260" x="540" y="809.5" as="geometry" />
+        </mxCell>
+        <mxCell id="register" parent="client_lane" style="rounded=1;whiteSpace=wrap;html=1;arcSize=18;fillColor=#ffffff;strokeColor=#000000;strokeWidth=2;fontSize=20;fontStyle=1;align=center;verticalAlign=middle" value="Регистрация&lt;br&gt;клиента" vertex="1">
+          <mxGeometry height="90" width="240" x="167" y="60" as="geometry" />
+        </mxCell>
+        <mxCell id="lbl_ack_msg" parent="client_lane" style="text;html=1;strokeColor=none;fillColor=#ffffff;align=center;verticalAlign=middle;fontSize=20;fontStyle=1" value="&lt;div&gt;Отправка подтверждения&lt;/div&gt;&lt;div&gt;и рассылка события&lt;/div&gt;" vertex="1">
+          <mxGeometry height="24" width="190" x="787" y="670" as="geometry" />
+        </mxCell>
+        <mxCell id="lbl_send_event" parent="client_lane" style="text;html=1;strokeColor=none;fillColor=#ffffff;align=center;verticalAlign=middle;fontSize=20;fontStyle=1" value="отправка&amp;nbsp;&lt;div&gt;PuzzleEvent&lt;/div&gt;" vertex="1">
+          <mxGeometry height="24" width="137" x="690" y="390" as="geometry" />
+        </mxCell>
+        <mxCell id="lbl_success" parent="server_lane" style="text;html=1;strokeColor=none;fillColor=#ffffff;align=center;verticalAlign=middle;fontSize=20;fontStyle=1" value="успешное применение события" vertex="1">
+          <mxGeometry height="24" width="210" x="327" y="460" as="geometry" />
+        </mxCell>
+        <mxCell id="reject" parent="server_lane" style="rounded=1;whiteSpace=wrap;html=1;arcSize=18;fillColor=#ffffff;strokeColor=#000000;strokeWidth=2;fontSize=20;fontStyle=1;align=center;verticalAlign=middle" value="Отклонение&lt;br&gt;события" vertex="1">
+          <mxGeometry height="105" width="260" x="677" y="280" as="geometry" />
+        </mxCell>
+        <mxCell id="wait_event" parent="1" style="rounded=1;whiteSpace=wrap;html=1;arcSize=18;fillColor=#ffffff;strokeColor=#000000;strokeWidth=2;fontSize=20;fontStyle=1;align=center;verticalAlign=middle" value="Ожидание&lt;br&gt;события" vertex="1">
+          <mxGeometry height="90" width="240" x="643" y="150" as="geometry" />
+        </mxCell>
+        <mxCell id="form_event" parent="1" style="rounded=1;whiteSpace=wrap;html=1;arcSize=18;fillColor=#ffffff;strokeColor=#000000;strokeWidth=2;fontSize=20;fontStyle=1;align=center;verticalAlign=middle" value="Формирование&lt;br&gt;исходящего&lt;br&gt;события" vertex="1">
+          <mxGeometry height="105" width="240" x="643" y="330" as="geometry" />
+        </mxCell>
+        <mxCell id="server_wait" parent="1" style="rounded=1;whiteSpace=wrap;html=1;arcSize=18;fillColor=#ffffff;strokeColor=#000000;strokeWidth=2;fontSize=20;fontStyle=1;align=center;verticalAlign=middle" value="Ожидание&lt;br&gt;сообщения" vertex="1">
+          <mxGeometry height="90" width="260" x="1253" y="150" as="geometry" />
+        </mxCell>
+        <mxCell id="QZTW3nC468Pdy8-z6itu-2" edge="1" parent="1" source="process" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeWidth=2;" target="reject">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="process" parent="1" style="rounded=1;whiteSpace=wrap;html=1;arcSize=18;fillColor=#ffffff;strokeColor=#000000;strokeWidth=2;fontSize=20;fontStyle=1;align=center;verticalAlign=middle" value="Обработка&lt;br&gt;события сервером" vertex="1">
+          <mxGeometry height="105" width="260" x="1253" y="370" as="geometry" />
+        </mxCell>
+        <mxCell id="broadcast" parent="1" style="rounded=1;whiteSpace=wrap;html=1;arcSize=18;fillColor=#ffffff;strokeColor=#000000;strokeWidth=2;fontSize=20;fontStyle=1;align=center;verticalAlign=middle" value="&lt;div&gt;Отправка подтверждения&lt;/div&gt;&lt;div&gt;и рассылка события&lt;/div&gt;" vertex="1">
+          <mxGeometry height="105" width="260" x="1253" y="885" as="geometry" />
+        </mxCell>
+        <mxCell id="lbl_rejected" parent="1" style="text;html=1;strokeColor=none;fillColor=#ffffff;align=center;verticalAlign=middle;fontSize=20;fontStyle=1" value="событие отклонено" vertex="1">
+          <mxGeometry height="24" width="150" x="1628" y="160" as="geometry" />
+        </mxCell>
+        <mxCell id="e_register_wait" edge="1" parent="1" source="register" style="endArrow=block;html=1;rounded=0;strokeWidth=2;endFill=1;edgeStyle=orthogonalEdgeStyle;curved=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;fontStyle=1;fontSize=20;" value="">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="483" y="195" as="sourcePoint" />
+            <mxPoint x="643" y="195" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e_wait_form" edge="1" parent="1" style="endArrow=block;html=1;rounded=0;strokeWidth=2;endFill=1;edgeStyle=orthogonalEdgeStyle;curved=0;fontStyle=1;fontSize=20;" value="">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="763" y="240" as="sourcePoint" />
+            <mxPoint x="763" y="330" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e_ack_return" edge="1" parent="1" source="wait_ack" style="endArrow=block;html=1;rounded=0;strokeWidth=2;endFill=1;edgeStyle=orthogonalEdgeStyle;curved=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;fontStyle=1;fontSize=20;" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1030" y="615" />
+              <mxPoint x="1030" y="195" />
+            </Array>
+            <mxPoint x="883" y="615" as="sourcePoint" />
+            <mxPoint x="883" y="195" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e_wait_process" edge="1" parent="1" style="endArrow=block;html=1;rounded=0;strokeWidth=2;endFill=1;edgeStyle=orthogonalEdgeStyle;curved=0;fontStyle=1;fontSize=20;" value="">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1383" y="240" as="sourcePoint" />
+            <mxPoint x="1383" y="370" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e_form_process" edge="1" parent="1" style="endArrow=block;html=1;rounded=0;strokeWidth=2;endFill=1;edgeStyle=orthogonalEdgeStyle;curved=0;fontStyle=1;fontSize=20;" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1053" y="382" />
+              <mxPoint x="1053" y="410" />
+            </Array>
+            <mxPoint x="883" y="382" as="sourcePoint" />
+            <mxPoint x="1253" y="410" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e_reject_wait" edge="1" parent="1" style="endArrow=block;html=1;rounded=0;strokeWidth=2;endFill=1;edgeStyle=orthogonalEdgeStyle;curved=0;fontStyle=1;fontSize=20;" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1943" y="370" />
+              <mxPoint x="1943" y="195" />
+            </Array>
+            <mxPoint x="1823" y="370" as="sourcePoint" />
+            <mxPoint x="1513" y="195" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e_success" edge="1" parent="1" style="endArrow=block;html=1;rounded=0;strokeWidth=2;endFill=1;edgeStyle=orthogonalEdgeStyle;curved=0;fontStyle=1;fontSize=20;" value="">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1383" y="475" as="sourcePoint" />
+            <mxPoint x="1383" y="885" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

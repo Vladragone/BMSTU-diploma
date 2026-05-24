@@ -1,0 +1,141 @@
+\usepackage{cmap}
+\usepackage[T2A]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[english,russian]{babel}
+\usepackage{enumitem}
+\usepackage{csquotes}
+\usepackage{url}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usepackage{tempora}
+\usepackage{pdfpages}
+\usepackage{amssymb}
+
+\usepackage{titlesec}
+\usepackage[none]{hyphenat}
+
+\titleformat{\chapter}[block]{\hspace{\parindent}\fontsize{16pt}{20pt}\selectfont\bfseries}{\thechapter}{0.5em}{\fontsize{16pt}{20pt}\selectfont\bfseries\raggedright}
+\titleformat{name=\chapter,numberless}[block]{\hspace{\parindent}}{}{0pt}{\fontsize{16pt}{20pt}\selectfont\bfseries\centering}
+\titleformat{\section}[block]{\hspace{\parindent}\fontsize{15pt}{19pt}\selectfont\bfseries}{\thesection}{0.5em}{\fontsize{15pt}{19pt}\selectfont\bfseries\raggedright}
+\titleformat{\subsection}[block]{\hspace{\parindent}\fontsize{14pt}{18pt}\selectfont\bfseries}{\thesubsection}{0.5em}{\fontsize{14pt}{18pt}\selectfont\bfseries\raggedright}
+\titleformat{\subsubsection}[block]{\hspace{\parindent}\fontsize{14pt}{18pt}\selectfont\bfseries}{\thesubsubsection}{0.5em}{\fontsize{14pt}{18pt}\selectfont\bfseries\raggedright}
+
+\hyphenpenalty=10000
+\titlespacing*{\chapter}{0pt}{*1}{*1}
+\titlespacing*{\section}{0pt}{*1}{*1}
+\titlespacing*{\subsection}{0pt}{*1}{*1}
+\titlespacing*{\subsubsection}{0pt}{*1}{*1}
+
+
+
+\titlespacing{\chapter}{12.5mm}{-22pt}{10pt}
+\titlespacing{\section}{12.5mm}{10pt}{10pt}
+\titlespacing{\subsection}{12.5mm}{10pt}{10pt}
+\titlespacing{\subsubsection}{12.5mm}{10pt}{10pt}
+
+
+\usepackage{longtable}
+
+\makeatletter
+\renewcommand*{\l@chapter}[2]{
+\ifnum \c@tocdepth>\m@ne
+    \addpenalty{-\@highpenalty}
+    \vskip 1em \@plus.2em
+    \@dottedtocline{0}{0pt}{1.5em}{\bfseries #1}{\bfseries #2}
+\fi
+}
+\makeatother
+\usepackage{threeparttable}
+\usepackage{tabularx}
+
+\usepackage[14pt]{extsizes}
+
+\usepackage{caption}
+\captionsetup{labelsep=endash}
+\captionsetup[figure]{name={Рисунок}}
+
+\captionsetup[lstlisting]{justification=raggedright,singlelinecheck=off}
+
+\usepackage{amsmath}
+
+\usepackage{geometry}
+\geometry{left=30mm}
+\geometry{right=10mm}
+\geometry{top=20mm}
+\geometry{bottom=20mm}
+
+
+\usepackage{setspace}
+\onehalfspacing
+
+\frenchspacing
+\usepackage{indentfirst}
+\setlength\parindent{1.25cm}
+
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{float}
+\usepackage{amsmath}
+
+
+\newcommand{\RomanNumeralCaps}[1]
+{\MakeUppercase{\romannumeral #1}}
+
+\usepackage{pgfplots}
+\usetikzlibrary{datavisualization}
+\usetikzlibrary{datavisualization.formats.functions}
+
+\usepackage{graphicx}
+\newcommand{\imgScale}[3] {
+	\begin{figure}[h!]
+		\center{\includegraphics[scale=#1]{img/#2}}
+		\caption{#3}
+		\label{img:#2}
+	\end{figure}
+}
+
+\usepackage{graphicx}
+\newcommand{\imgHeight}[3] {
+	\begin{figure}[h!]
+		\center{\includegraphics[height=#1]{#2}}
+		\caption{#3}
+		\label{img:#2}
+	\end{figure}
+}
+
+\newcommand{\inputPdf}[2]{
+	\begin{figure}[H]
+		\center{\includegraphics[width=\textwidth]{img/#1}}
+		\caption{#2}
+		\label{img:#1}
+	\end{figure}
+}
+
+\usepackage[notransparent]{svg}
+
+\usepackage[justification=centering]{caption}
+
+\usepackage[unicode,pdftex]{hyperref}
+\hypersetup{hidelinks}
+
+\usepackage{csvsimple}
+
+\newcommand{\code}[1]{\texttt{#1}}
+
+\usepackage{tabularx}
+
+\usepackage{enumitem}
+\setlist[itemize]{label=---}
+
+\usepackage{csquotes}
+
+\usepackage[parentracker=true,
+backend=biber,
+style=gost-numeric,
+language=auto,
+autolang=other,
+citestyle=gost-numeric,
+bibstyle=gost-numeric,
+sorting=ntvy,
+]{biblatex}
+\addbibresource{./parts/lib.bib}

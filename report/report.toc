@@ -1,0 +1,137 @@
+\babel@toc {russian}{}\relax 
+\contentsline {chapter}{РЕФЕРАТ}{5}{chapter*.2}%
+\contentsline {chapter}{ВВЕДЕНИЕ}{9}{chapter*.4}%
+\contentsline {chapter}{\numberline {1}Аналитический раздел}{11}{chapter.1}%
+\contentsline {section}{\numberline {1.1}Анализ предметной области синхронизации игровых состояний}{11}{section.1.1}%
+\contentsline {subsection}{\numberline {1.1.1}Общие положения сетевого взаимодействия}{11}{subsection.1.1.1}%
+\babel@toc {english}{}\relax 
+\babel@toc {russian}{}\relax 
+\babel@toc {english}{}\relax 
+\babel@toc {russian}{}\relax 
+\babel@toc {russian}{}\relax 
+\babel@toc {russian}{}\relax 
+\contentsline {subsection}{\numberline {1.1.2}Игровое состояние и требования к его синхронизации}{12}{subsection.1.1.2}%
+\contentsline {subsection}{\numberline {1.1.3}Модели передачи данных и источники рассинхронизации}{13}{subsection.1.1.3}%
+\contentsline {subsection}{\numberline {1.1.4}Факторы, влияющие на требования к синхронизации}{14}{subsection.1.1.4}%
+\contentsline {section}{\numberline {1.2}Формализация задачи обеспечения согласованности игровых данных}{15}{section.1.2}%
+\contentsline {subsection}{\numberline {1.2.1}Математическое представление игрового состояния}{15}{subsection.1.2.1}%
+\contentsline {subsection}{\numberline {1.2.2}Модель клиент-серверного взаимодействия}{16}{subsection.1.2.2}%
+\contentsline {subsection}{\numberline {1.2.3}Определение рассогласования состояния}{17}{subsection.1.2.3}%
+\contentsline {subsection}{\numberline {1.2.4}Постановка задачи обеспечения согласованности}{18}{subsection.1.2.4}%
+\contentsline {subsection}{\numberline {1.2.5}Требования к алгоритмам синхронизации}{19}{subsection.1.2.5}%
+\contentsline {section}{\numberline {1.3}Обзор существующих подходов к синхронизации состояния}{20}{section.1.3}%
+\contentsline {subsection}{\numberline {1.3.1}Периодическая репликация состояния}{20}{subsection.1.3.1}%
+\babel@toc {russian}{}\relax 
+\babel@toc {russian}{}\relax 
+\babel@toc {russian}{}\relax 
+\babel@toc {russian}{}\relax 
+\contentsline {subsection}{\numberline {1.3.2}Репликация только изменений}{21}{subsection.1.3.2}%
+\babel@toc {russian}{}\relax 
+\babel@toc {russian}{}\relax 
+\contentsline {subsection}{\numberline {1.3.3}Событийная модель}{21}{subsection.1.3.3}%
+\babel@toc {english}{}\relax 
+\babel@toc {russian}{}\relax 
+\contentsline {subsection}{\numberline {1.3.4}Синхронизация по входным данным}{22}{subsection.1.3.4}%
+\babel@toc {russian}{}\relax 
+\babel@toc {russian}{}\relax 
+\contentsline {subsection}{\numberline {1.3.5}Предсказание состояния на клиенте}{22}{subsection.1.3.5}%
+\babel@toc {english}{}\relax 
+\babel@toc {russian}{}\relax 
+\contentsline {subsection}{\numberline {1.3.6}Откат сетевого кода}{23}{subsection.1.3.6}%
+\babel@toc {english}{}\relax 
+\babel@toc {russian}{}\relax 
+\contentsline {section}{\numberline {1.4}Обзор методов передачи игровых данных}{23}{section.1.4}%
+\contentsline {subsection}{\numberline {1.4.1}Надежная и ненадежная доставка данных}{23}{subsection.1.4.1}%
+\babel@toc {english}{}\relax 
+\babel@toc {russian}{}\relax 
+\babel@toc {english}{}\relax 
+\babel@toc {russian}{}\relax 
+\contentsline {subsection}{\numberline {1.4.2}Классификация и приоритизация игровых пакетов}{24}{subsection.1.4.2}%
+\contentsline {subsection}{\numberline {1.4.3}Механизмы обеспечения частичной надежности}{25}{subsection.1.4.3}%
+\contentsline {subsection}{\numberline {1.4.4}Адаптивные алгоритмы передачи данных}{25}{subsection.1.4.4}%
+\contentsline {section}{\numberline {1.5}Типовые игровые данные, подлежащие хранению, обновлению и передаче}{26}{section.1.5}%
+\babel@toc {english}{}\relax 
+\babel@toc {russian}{}\relax 
+\contentsline {subsection}{\numberline {1.5.1}Данные состояния объектов}{26}{subsection.1.5.1}%
+\contentsline {subsection}{\numberline {1.5.2}Данные игровой логики}{27}{subsection.1.5.2}%
+\contentsline {subsection}{\numberline {1.5.3}Данные взаимодействия и событий}{27}{subsection.1.5.3}%
+\contentsline {subsection}{\numberline {1.5.4}Вспомогательные данные}{28}{subsection.1.5.4}%
+\contentsline {subsection}{\numberline {1.5.5}Визуальные данные}{28}{subsection.1.5.5}%
+\contentsline {subsection}{\numberline {1.5.6}Метаданные и технические данные}{29}{subsection.1.5.6}%
+\contentsline {section}{\numberline {1.6}Основные причины возникновения рассинхронизации}{30}{section.1.6}%
+\contentsline {subsection}{\numberline {1.6.1}Сетевые задержки}{30}{subsection.1.6.1}%
+\babel@toc {english}{}\relax 
+\babel@toc {russian}{}\relax 
+\contentsline {subsection}{\numberline {1.6.2}Потеря, дублирование и нарушение порядка доставки пакетов}{30}{subsection.1.6.2}%
+\contentsline {subsection}{\numberline {1.6.3}Недетерминизм симуляции}{31}{subsection.1.6.3}%
+\contentsline {subsection}{\numberline {1.6.4}Различия в производительности клиентских устройств}{31}{subsection.1.6.4}%
+\contentsline {subsection}{\numberline {1.6.5}Неправильная или неполная сериализация данных}{32}{subsection.1.6.5}%
+\contentsline {subsection}{\numberline {1.6.6}Несогласованный порядок выполнения событий}{32}{subsection.1.6.6}%
+\contentsline {subsection}{\numberline {1.6.7}Ошибки в предсказании и последующей коррекции состояния}{32}{subsection.1.6.7}%
+\babel@toc {russian}{}\relax 
+\babel@toc {russian}{}\relax 
+\contentsline {chapter}{\numberline {2}Конструкторский раздел}{34}{chapter.2}%
+\contentsline {section}{\numberline {2.1}Требования к разрабатываемому методу}{34}{section.2.1}%
+\contentsline {section}{\numberline {2.2}Функциональная модель метода}{35}{section.2.2}%
+\contentsline {section}{\numberline {2.3}Формальная модель синхронизации}{36}{section.2.3}%
+\contentsline {section}{\numberline {2.4}Состояния протокола синхронизации}{39}{section.2.4}%
+\contentsline {section}{\numberline {2.5}Модель переходов протокола синхронизации}{40}{section.2.5}%
+\contentsline {section}{\numberline {2.6}Структура передаваемых событий}{42}{section.2.6}%
+\contentsline {section}{\numberline {2.7}Механизм подтверждения и повторной отправки}{44}{section.2.7}%
+\contentsline {section}{\numberline {2.8}Контроль порядка сообщений}{45}{section.2.8}%
+\contentsline {section}{\numberline {2.9}Алгоритм синхронизации состояний}{45}{section.2.9}%
+\contentsline {section}{\numberline {2.10}Структура программного обеспечения}{48}{section.2.10}%
+\contentsline {chapter}{\numberline {3}Технологический раздел}{50}{chapter.3}%
+\contentsline {section}{\numberline {3.1}Выбор средств программной реализации}{50}{section.3.1}%
+\contentsline {section}{\numberline {3.2}Структура программного обеспечения}{50}{section.3.2}%
+\contentsline {section}{\numberline {3.3}Реализация сетевого обмена}{52}{section.3.3}%
+\contentsline {section}{\numberline {3.4}Реализация структуры сетевого сообщения}{57}{section.3.4}%
+\contentsline {section}{\numberline {3.5}Реализация менеджера синхронизации событий}{60}{section.3.5}%
+\contentsline {section}{\numberline {3.6}Реализация подтверждений и повторной отправки}{65}{section.3.6}%
+\contentsline {section}{\numberline {3.7}Реализация объектов с конечными автоматами}{67}{section.3.7}%
+\contentsline {section}{\numberline {3.8}Реализация пользовательского взаимодействия}{70}{section.3.8}%
+\contentsline {section}{\numberline {3.9}Средства имитации сетевых ошибок}{70}{section.3.9}%
+\contentsline {section}{\numberline {3.10}Тестирование разработанного программного обеспечения}{73}{section.3.10}%
+\contentsline {chapter}{\numberline {4}Исследовательский раздел}{76}{chapter.4}%
+\contentsline {section}{\numberline {4.1}Цель исследования}{76}{section.4.1}%
+\contentsline {section}{\numberline {4.2}Сравниваемые режимы синхронизации}{76}{section.4.2}%
+\contentsline {section}{\numberline {4.3}Критерии оценки эффективности}{77}{section.4.3}%
+\contentsline {section}{\numberline {4.4}Порядок проведения исследования}{79}{section.4.4}%
+\contentsline {section}{\numberline {4.5}Сценарии исследования}{79}{section.4.5}%
+\contentsline {section}{\numberline {4.6}Результаты исследования разработанного метода}{80}{section.4.6}%
+\contentsline {section}{\numberline {4.7}Результаты исследования базового UDP-подхода}{81}{section.4.7}%
+\contentsline {section}{\numberline {4.8}Сравнение результатов}{82}{section.4.8}%
+\contentsline {section}{\numberline {4.9}Выводы по результатам исследования}{83}{section.4.9}%
+\contentsline {chapter}{ЗАКЛЮЧЕНИЕ}{85}{chapter*.21}%
+\babel@toc {english}{}\relax 
+\babel@toc {russian}{}\relax 
+\babel@toc {english}{}\relax 
+\babel@toc {russian}{}\relax 
+\babel@toc {russian}{}\relax 
+\babel@toc {russian}{}\relax 
+\babel@toc {russian}{}\relax 
+\babel@toc {russian}{}\relax 
+\babel@toc {russian}{}\relax 
+\babel@toc {russian}{}\relax 
+\babel@toc {russian}{}\relax 
+\babel@toc {russian}{}\relax 
+\babel@toc {english}{}\relax 
+\babel@toc {russian}{}\relax 
+\babel@toc {russian}{}\relax 
+\babel@toc {russian}{}\relax 
+\babel@toc {english}{}\relax 
+\babel@toc {russian}{}\relax 
+\babel@toc {english}{}\relax 
+\babel@toc {russian}{}\relax 
+\babel@toc {english}{}\relax 
+\babel@toc {russian}{}\relax 
+\babel@toc {english}{}\relax 
+\babel@toc {russian}{}\relax 
+\babel@toc {english}{}\relax 
+\babel@toc {russian}{}\relax 
+\babel@toc {english}{}\relax 
+\babel@toc {russian}{}\relax 
+\babel@toc {russian}{}\relax 
+\babel@toc {russian}{}\relax 
+\contentsline {chapter}{СПИСОК ИСПОЛЬЗОВАННЫХ ИСТОЧНИКОВ}{88}{chapter*.22}%
+\contentsline {chapter}{\MakeUppercase []{ПРИЛОЖЕНИЕ А}}{89}{chapter*.23}%

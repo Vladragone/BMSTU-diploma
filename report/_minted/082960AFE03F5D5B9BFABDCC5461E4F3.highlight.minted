@@ -1,0 +1,138 @@
+\begin{MintedVerbatim}[commandchars=\\\{\},codes={\catcode`\$=3\catcode`\^=7\catcode`\_=8\relax}]
+\PYG{k}{using}\PYG{+w}{ }\PYG{n+nn}{System.Collections}\PYG{p}{;}
+\PYG{k}{using}\PYG{+w}{ }\PYG{n+nn}{UnityEngine}\PYG{p}{;}
+
+\PYG{k}{public}\PYG{+w}{ }\PYG{k}{class}\PYG{+w}{ }\PYG{n+nc}{PuzzleDoor}\PYG{+w}{ }\PYG{p}{:}\PYG{+w}{ }\PYG{n}{MonoBehaviour}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{IFsmPuzzleObject}
+\PYG{p}{\PYGZob{}}
+\PYG{+w}{    }\PYG{n+na}{[Header(\PYGZdq{}FSM Object Settings\PYGZdq{})]}
+\PYG{+w}{    }\PYG{k}{public}\PYG{+w}{ }\PYG{k+kt}{string}\PYG{+w}{ }\PYG{n}{objectId}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}Door\PYGZus{}A\PYGZdq{}}\PYG{p}{;}
+
+\PYG{+w}{    }\PYG{n+na}{[Header(\PYGZdq{}Door Movement\PYGZdq{})]}
+\PYG{+w}{    }\PYG{k}{public}\PYG{+w}{ }\PYG{k+kt}{float}\PYG{+w}{ }\PYG{n}{openHeight}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+m+mf}{3f}\PYG{p}{;}
+\PYG{+w}{    }\PYG{k}{public}\PYG{+w}{ }\PYG{k+kt}{float}\PYG{+w}{ }\PYG{n}{moveSpeed}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+m+mf}{3f}\PYG{p}{;}
+
+\PYG{+w}{    }\PYG{k}{private}\PYG{+w}{ }\PYG{n}{DoorStateMachine}\PYG{+w}{ }\PYG{n}{stateMachine}\PYG{p}{;}
+\PYG{+w}{    }\PYG{k}{private}\PYG{+w}{ }\PYG{n}{Vector3}\PYG{+w}{ }\PYG{n}{closedPosition}\PYG{p}{;}
+\PYG{+w}{    }\PYG{k}{private}\PYG{+w}{ }\PYG{n}{Vector3}\PYG{+w}{ }\PYG{n}{openPosition}\PYG{p}{;}
+\PYG{+w}{    }\PYG{k}{private}\PYG{+w}{ }\PYG{n}{Coroutine}\PYG{+w}{ }\PYG{n}{moveCoroutine}\PYG{p}{;}
+
+\PYG{+w}{    }\PYG{k}{private}\PYG{+w}{ }\PYG{k+kt}{bool}\PYG{+w}{ }\PYG{n}{isInitialized}\PYG{p}{;}
+
+\PYG{+w}{    }\PYG{k}{public}\PYG{+w}{ }\PYG{k+kt}{string}\PYG{+w}{ }\PYG{n}{ObjectId}\PYG{+w}{ }\PYG{o}{=\PYGZgt{}}\PYG{+w}{ }\PYG{n}{objectId}\PYG{p}{;}
+
+\PYG{+w}{    }\PYG{k}{private}\PYG{+w}{ }\PYG{k}{void}\PYG{+w}{ }\PYG{n+nf}{Awake}\PYG{p}{(}\PYG{p}{)}
+\PYG{+w}{    }\PYG{p}{\PYGZob{}}
+\PYG{+w}{        }\PYG{n}{InitializeDoor}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
+\PYG{+w}{    }\PYG{p}{\PYGZcb{}}
+
+\PYG{+w}{    }\PYG{k}{private}\PYG{+w}{ }\PYG{k}{void}\PYG{+w}{ }\PYG{n+nf}{Start}\PYG{p}{(}\PYG{p}{)}
+\PYG{+w}{    }\PYG{p}{\PYGZob{}}
+\PYG{+w}{        }\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{EventFsmSyncManager}\PYG{p}{.}\PYG{n}{Instance}\PYG{+w}{ }\PYG{o}{!=}\PYG{+w}{ }\PYG{k}{null}\PYG{p}{)}
+\PYG{+w}{        }\PYG{p}{\PYGZob{}}
+\PYG{+w}{            }\PYG{n}{EventFsmSyncManager}\PYG{p}{.}\PYG{n}{Instance}\PYG{p}{.}\PYG{n}{RegisterObject}\PYG{p}{(}\PYG{k}{this}\PYG{p}{)}\PYG{p}{;}
+\PYG{+w}{        }\PYG{p}{\PYGZcb{}}
+\PYG{+w}{        }\PYG{k}{else}
+\PYG{+w}{        }\PYG{p}{\PYGZob{}}
+\PYG{+w}{            }\PYG{n}{Debug}\PYG{p}{.}\PYG{n}{LogError}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}[PuzzleDoor] EventFsmSyncManager не найден на сцене\PYGZdq{}}\PYG{p}{)}\PYG{p}{;}
+\PYG{+w}{        }\PYG{p}{\PYGZcb{}}
+\PYG{+w}{    }\PYG{p}{\PYGZcb{}}
+
+\PYG{+w}{    }\PYG{k}{private}\PYG{+w}{ }\PYG{k}{void}\PYG{+w}{ }\PYG{n+nf}{InitializeDoor}\PYG{p}{(}\PYG{p}{)}
+\PYG{+w}{    }\PYG{p}{\PYGZob{}}
+\PYG{+w}{        }\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{isInitialized}\PYG{p}{)}
+\PYG{+w}{            }\PYG{k}{return}\PYG{p}{;}
+
+\PYG{+w}{        }\PYG{n}{closedPosition}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{transform}\PYG{p}{.}\PYG{n}{position}\PYG{p}{;}
+\PYG{+w}{        }\PYG{n}{openPosition}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{closedPosition}\PYG{+w}{ }\PYG{o}{+}\PYG{+w}{ }\PYG{n}{Vector3}\PYG{p}{.}\PYG{n}{up}\PYG{+w}{ }\PYG{o}{*}\PYG{+w}{ }\PYG{n}{openHeight}\PYG{p}{;}
+
+\PYG{+w}{        }\PYG{n}{stateMachine}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{k}{new}\PYG{+w}{ }\PYG{n}{DoorStateMachine}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
+
+\PYG{+w}{        }\PYG{n}{isInitialized}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{k}{true}\PYG{p}{;}
+
+\PYG{+w}{        }\PYG{n}{Debug}\PYG{p}{.}\PYG{n}{Log}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}[PuzzleDoor] Инициализирована дверь: \PYGZdq{}}\PYG{+w}{ }\PYG{o}{+}\PYG{+w}{ }\PYG{n}{objectId}\PYG{p}{)}\PYG{p}{;}
+\PYG{+w}{    }\PYG{p}{\PYGZcb{}}
+
+\PYG{+w}{    }\PYG{k}{public}\PYG{+w}{ }\PYG{k+kt}{bool}\PYG{+w}{ }\PYG{n+nf}{ApplyPuzzleEvent}\PYG{p}{(}\PYG{n}{PuzzleEvent}\PYG{+w}{ }\PYG{n}{puzzleEvent}\PYG{p}{)}
+\PYG{+w}{    }\PYG{p}{\PYGZob{}}
+\PYG{+w}{        }\PYG{n}{InitializeDoor}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
+
+\PYG{+w}{        }\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{puzzleEvent}\PYG{p}{.}\PYG{n}{eventType}\PYG{+w}{ }\PYG{o}{==}\PYG{+w}{ }\PYG{n}{PuzzleEventType}\PYG{p}{.}\PYG{n}{ButtonPressed}\PYG{p}{)}
+\PYG{+w}{        }\PYG{p}{\PYGZob{}}
+\PYG{+w}{            }\PYG{k}{return}\PYG{+w}{ }\PYG{n+nf}{OpenByFsm}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
+\PYG{+w}{        }\PYG{p}{\PYGZcb{}}
+
+\PYG{+w}{        }\PYG{n}{Debug}\PYG{p}{.}\PYG{n}{LogWarning}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}[PuzzleDoor] Неподходящее событие для двери: \PYGZdq{}}\PYG{+w}{ }\PYG{o}{+}\PYG{+w}{ }\PYG{n}{puzzleEvent}\PYG{p}{.}\PYG{n}{eventType}\PYG{p}{)}\PYG{p}{;}
+\PYG{+w}{        }\PYG{k}{return}\PYG{+w}{ }\PYG{k}{false}\PYG{p}{;}
+\PYG{+w}{    }\PYG{p}{\PYGZcb{}}
+
+\PYG{+w}{    }\PYG{k}{public}\PYG{+w}{ }\PYG{k}{void}\PYG{+w}{ }\PYG{n+nf}{SetDoorOpen}\PYG{p}{(}\PYG{k+kt}{bool}\PYG{+w}{ }\PYG{n}{isOpen}\PYG{p}{)}
+\PYG{+w}{    }\PYG{p}{\PYGZob{}}
+\PYG{+w}{        }\PYG{n}{InitializeDoor}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
+
+\PYG{+w}{        }\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{isOpen}\PYG{p}{)}
+\PYG{+w}{        }\PYG{p}{\PYGZob{}}
+\PYG{+w}{            }\PYG{n}{OpenByFsm}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
+\PYG{+w}{        }\PYG{p}{\PYGZcb{}}
+\PYG{+w}{        }\PYG{k}{else}
+\PYG{+w}{        }\PYG{p}{\PYGZob{}}
+\PYG{+w}{            }\PYG{n}{CloseByFsm}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
+\PYG{+w}{        }\PYG{p}{\PYGZcb{}}
+\PYG{+w}{    }\PYG{p}{\PYGZcb{}}
+
+\PYG{+w}{    }\PYG{k}{private}\PYG{+w}{ }\PYG{k+kt}{bool}\PYG{+w}{ }\PYG{n+nf}{OpenByFsm}\PYG{p}{(}\PYG{p}{)}
+\PYG{+w}{    }\PYG{p}{\PYGZob{}}
+\PYG{+w}{        }\PYG{n}{InitializeDoor}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
+
+\PYG{+w}{        }\PYG{k+kt}{bool}\PYG{+w}{ }\PYG{n}{success}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{stateMachine}\PYG{p}{.}\PYG{n}{ApplyEvent}\PYG{p}{(}\PYG{n}{DoorEvent}\PYG{p}{.}\PYG{n}{OpenDoor}\PYG{p}{)}\PYG{p}{;}
+
+\PYG{+w}{        }\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{success}\PYG{p}{)}
+\PYG{+w}{        }\PYG{p}{\PYGZob{}}
+\PYG{+w}{            }\PYG{n}{MoveTo}\PYG{p}{(}\PYG{n}{openPosition}\PYG{p}{)}\PYG{p}{;}
+\PYG{+w}{        }\PYG{p}{\PYGZcb{}}
+
+\PYG{+w}{        }\PYG{k}{return}\PYG{+w}{ }\PYG{n}{success}\PYG{p}{;}
+\PYG{+w}{    }\PYG{p}{\PYGZcb{}}
+
+\PYG{+w}{    }\PYG{k}{private}\PYG{+w}{ }\PYG{k+kt}{bool}\PYG{+w}{ }\PYG{n+nf}{CloseByFsm}\PYG{p}{(}\PYG{p}{)}
+\PYG{+w}{    }\PYG{p}{\PYGZob{}}
+\PYG{+w}{        }\PYG{n}{InitializeDoor}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
+
+\PYG{+w}{        }\PYG{k+kt}{bool}\PYG{+w}{ }\PYG{n}{success}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{stateMachine}\PYG{p}{.}\PYG{n}{ApplyEvent}\PYG{p}{(}\PYG{n}{DoorEvent}\PYG{p}{.}\PYG{n}{CloseDoor}\PYG{p}{)}\PYG{p}{;}
+
+\PYG{+w}{        }\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{success}\PYG{p}{)}
+\PYG{+w}{        }\PYG{p}{\PYGZob{}}
+\PYG{+w}{            }\PYG{n}{MoveTo}\PYG{p}{(}\PYG{n}{closedPosition}\PYG{p}{)}\PYG{p}{;}
+\PYG{+w}{        }\PYG{p}{\PYGZcb{}}
+
+\PYG{+w}{        }\PYG{k}{return}\PYG{+w}{ }\PYG{n}{success}\PYG{p}{;}
+\PYG{+w}{    }\PYG{p}{\PYGZcb{}}
+
+\PYG{+w}{    }\PYG{k}{private}\PYG{+w}{ }\PYG{k}{void}\PYG{+w}{ }\PYG{n+nf}{MoveTo}\PYG{p}{(}\PYG{n}{Vector3}\PYG{+w}{ }\PYG{n}{targetPosition}\PYG{p}{)}
+\PYG{+w}{    }\PYG{p}{\PYGZob{}}
+\PYG{+w}{        }\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{moveCoroutine}\PYG{+w}{ }\PYG{o}{!=}\PYG{+w}{ }\PYG{k}{null}\PYG{p}{)}
+\PYG{+w}{        }\PYG{p}{\PYGZob{}}
+\PYG{+w}{            }\PYG{n}{StopCoroutine}\PYG{p}{(}\PYG{n}{moveCoroutine}\PYG{p}{)}\PYG{p}{;}
+\PYG{+w}{        }\PYG{p}{\PYGZcb{}}
+
+\PYG{+w}{        }\PYG{n}{moveCoroutine}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{StartCoroutine}\PYG{p}{(}\PYG{n}{MoveDoorCoroutine}\PYG{p}{(}\PYG{n}{targetPosition}\PYG{p}{)}\PYG{p}{)}\PYG{p}{;}
+\PYG{+w}{    }\PYG{p}{\PYGZcb{}}
+
+\PYG{+w}{    }\PYG{k}{private}\PYG{+w}{ }\PYG{n}{IEnumerator}\PYG{+w}{ }\PYG{n+nf}{MoveDoorCoroutine}\PYG{p}{(}\PYG{n}{Vector3}\PYG{+w}{ }\PYG{n}{targetPosition}\PYG{p}{)}
+\PYG{+w}{    }\PYG{p}{\PYGZob{}}
+\PYG{+w}{        }\PYG{n}{Debug}\PYG{p}{.}\PYG{n}{Log}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}[PuzzleDoor] Дверь плавно двигается: \PYGZdq{}}\PYG{+w}{ }\PYG{o}{+}\PYG{+w}{ }\PYG{n}{objectId}\PYG{p}{)}\PYG{p}{;}
+
+\PYG{+w}{        }\PYG{k}{while}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{Vector3}\PYG{p}{.}\PYG{n}{Distance}\PYG{p}{(}\PYG{n}{transform}\PYG{p}{.}\PYG{n}{position}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{targetPosition}\PYG{p}{)}\PYG{+w}{ }\PYG{o}{\PYGZgt{}}\PYG{+w}{ }\PYG{l+m+mf}{0.01f}\PYG{p}{)}
+\PYG{+w}{        }\PYG{p}{\PYGZob{}}
+\PYG{+w}{            }\PYG{n}{transform}\PYG{p}{.}\PYG{n}{position}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{Vector3}\PYG{p}{.}\PYG{n}{MoveTowards}\PYG{p}{(}
+\PYG{+w}{                }\PYG{n}{transform}\PYG{p}{.}\PYG{n}{position}\PYG{p}{,}
+\PYG{+w}{                }\PYG{n}{targetPosition}\PYG{p}{,}
+\PYG{+w}{                }\PYG{n}{moveSpeed}\PYG{+w}{ }\PYG{o}{*}\PYG{+w}{ }\PYG{n}{Time}\PYG{p}{.}\PYG{n}{deltaTime}
+\PYG{+w}{            }\PYG{p}{)}\PYG{p}{;}
+
+\PYG{+w}{            }\PYG{k}{yield}\PYG{+w}{ }\PYG{k}{return}\PYG{+w}{ }\PYG{k}{null}\PYG{p}{;}
+\PYG{+w}{        }\PYG{p}{\PYGZcb{}}
+
+\PYG{+w}{        }\PYG{n}{transform}\PYG{p}{.}\PYG{n}{position}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{targetPosition}\PYG{p}{;}
+\PYG{+w}{    }\PYG{p}{\PYGZcb{}}
+\PYG{p}{\PYGZcb{}}
+\end{MintedVerbatim}

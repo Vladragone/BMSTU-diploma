@@ -1,0 +1,45 @@
+\begin{MintedVerbatim}[commandchars=\\\{\},codes={\catcode`\$=3\catcode`\^=7\catcode`\_=8\relax}]
+\PYG{n+na}{[System.Serializable]}
+\PYG{k}{public}\PYG{+w}{ }\PYG{k}{class}\PYG{+w}{ }\PYG{n+nc}{NetworkMessage}
+\PYG{p}{\PYGZob{}}
+\PYG{+w}{    }\PYG{k}{public}\PYG{+w}{ }\PYG{n}{NetworkMessageType}\PYG{+w}{ }\PYG{n}{messageType}\PYG{p}{;}
+
+\PYG{+w}{    }\PYG{k}{public}\PYG{+w}{ }\PYG{n}{PuzzleEvent}\PYG{+w}{ }\PYG{n}{puzzleEvent}\PYG{p}{;}
+
+\PYG{+w}{    }\PYG{k}{public}\PYG{+w}{ }\PYG{k+kt}{int}\PYG{+w}{ }\PYG{n}{ackForEventId}\PYG{p}{;}
+\PYG{+w}{    }\PYG{k}{public}\PYG{+w}{ }\PYG{k+kt}{string}\PYG{+w}{ }\PYG{n}{senderPlayerId}\PYG{p}{;}
+\PYG{+w}{    }\PYG{k}{public}\PYG{+w}{ }\PYG{k+kt}{string}\PYG{+w}{ }\PYG{n}{targetPlayerId}\PYG{p}{;}
+
+\PYG{+w}{    }\PYG{k}{public}\PYG{+w}{ }\PYG{n+nf}{NetworkMessage}\PYG{p}{(}\PYG{n}{NetworkMessageType}\PYG{+w}{ }\PYG{n}{messageType}\PYG{p}{)}
+\PYG{+w}{    }\PYG{p}{\PYGZob{}}
+\PYG{+w}{        }\PYG{k}{this}\PYG{p}{.}\PYG{n}{messageType}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{messageType}\PYG{p}{;}
+\PYG{+w}{        }\PYG{k}{this}\PYG{p}{.}\PYG{n}{puzzleEvent}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{k}{null}\PYG{p}{;}
+\PYG{+w}{        }\PYG{k}{this}\PYG{p}{.}\PYG{n}{ackForEventId}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{;}
+\PYG{+w}{        }\PYG{k}{this}\PYG{p}{.}\PYG{n}{senderPlayerId}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}\PYGZdq{}}\PYG{p}{;}
+\PYG{+w}{        }\PYG{k}{this}\PYG{p}{.}\PYG{n}{targetPlayerId}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}\PYGZdq{}}\PYG{p}{;}
+\PYG{+w}{    }\PYG{p}{\PYGZcb{}}
+
+\PYG{+w}{    }\PYG{k}{public}\PYG{+w}{ }\PYG{k}{static}\PYG{+w}{ }\PYG{n}{NetworkMessage}\PYG{+w}{ }\PYG{n+nf}{CreateClientHelloMessage}\PYG{p}{(}\PYG{k+kt}{string}\PYG{+w}{ }\PYG{n}{playerId}\PYG{p}{)}
+\PYG{+w}{    }\PYG{p}{\PYGZob{}}
+\PYG{+w}{        }\PYG{n}{NetworkMessage}\PYG{+w}{ }\PYG{n}{message}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{k}{new}\PYG{+w}{ }\PYG{n}{NetworkMessage}\PYG{p}{(}\PYG{n}{NetworkMessageType}\PYG{p}{.}\PYG{n}{ClientHello}\PYG{p}{)}\PYG{p}{;}
+\PYG{+w}{        }\PYG{n}{message}\PYG{p}{.}\PYG{n}{senderPlayerId}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{playerId}\PYG{p}{;}
+\PYG{+w}{        }\PYG{k}{return}\PYG{+w}{ }\PYG{n}{message}\PYG{p}{;}
+\PYG{+w}{    }\PYG{p}{\PYGZcb{}}
+
+\PYG{+w}{    }\PYG{k}{public}\PYG{+w}{ }\PYG{k}{static}\PYG{+w}{ }\PYG{n}{NetworkMessage}\PYG{+w}{ }\PYG{n+nf}{CreatePuzzleEventMessage}\PYG{p}{(}\PYG{n}{PuzzleEvent}\PYG{+w}{ }\PYG{n}{puzzleEvent}\PYG{p}{)}
+\PYG{+w}{    }\PYG{p}{\PYGZob{}}
+\PYG{+w}{        }\PYG{n}{NetworkMessage}\PYG{+w}{ }\PYG{n}{message}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{k}{new}\PYG{+w}{ }\PYG{n}{NetworkMessage}\PYG{p}{(}\PYG{n}{NetworkMessageType}\PYG{p}{.}\PYG{n}{PuzzleEvent}\PYG{p}{)}\PYG{p}{;}
+\PYG{+w}{        }\PYG{n}{message}\PYG{p}{.}\PYG{n}{puzzleEvent}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{puzzleEvent}\PYG{p}{;}
+\PYG{+w}{        }\PYG{n}{message}\PYG{p}{.}\PYG{n}{senderPlayerId}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{puzzleEvent}\PYG{p}{.}\PYG{n}{sourcePlayerId}\PYG{p}{;}
+\PYG{+w}{        }\PYG{k}{return}\PYG{+w}{ }\PYG{n}{message}\PYG{p}{;}
+\PYG{+w}{    }\PYG{p}{\PYGZcb{}}
+
+\PYG{+w}{    }\PYG{k}{public}\PYG{+w}{ }\PYG{k}{static}\PYG{+w}{ }\PYG{n}{NetworkMessage}\PYG{+w}{ }\PYG{n+nf}{CreateAcknowledgementMessage}\PYG{p}{(}\PYG{k+kt}{int}\PYG{+w}{ }\PYG{n}{ackForEventId}\PYG{p}{,}\PYG{+w}{ }\PYG{k+kt}{string}\PYG{+w}{ }\PYG{n}{targetPlayerId}\PYG{p}{)}
+\PYG{+w}{    }\PYG{p}{\PYGZob{}}
+\PYG{+w}{        }\PYG{n}{NetworkMessage}\PYG{+w}{ }\PYG{n}{message}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{k}{new}\PYG{+w}{ }\PYG{n}{NetworkMessage}\PYG{p}{(}\PYG{n}{NetworkMessageType}\PYG{p}{.}\PYG{n}{Acknowledgement}\PYG{p}{)}\PYG{p}{;}
+\PYG{+w}{        }\PYG{n}{message}\PYG{p}{.}\PYG{n}{ackForEventId}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{ackForEventId}\PYG{p}{;}
+\PYG{+w}{        }\PYG{n}{message}\PYG{p}{.}\PYG{n}{targetPlayerId}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{targetPlayerId}\PYG{p}{;}
+\PYG{+w}{        }\PYG{k}{return}\PYG{+w}{ }\PYG{n}{message}\PYG{p}{;}
+\PYG{+w}{    }\PYG{p}{\PYGZcb{}}
+\PYG{p}{\PYGZcb{}}
+\end{MintedVerbatim}

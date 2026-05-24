@@ -1,0 +1,30 @@
+\begin{MintedVerbatim}[commandchars=\\\{\},codes={\catcode`\$=3\catcode`\^=7\catcode`\_=8\relax}]
+\PYG{n+na}{[System.Serializable]}
+\PYG{k}{public}\PYG{+w}{ }\PYG{k}{class}\PYG{+w}{ }\PYG{n+nc}{PuzzleEvent}
+\PYG{p}{\PYGZob{}}
+\PYG{+w}{    }\PYG{k}{public}\PYG{+w}{ }\PYG{k+kt}{int}\PYG{+w}{ }\PYG{n}{eventId}\PYG{p}{;}
+\PYG{+w}{    }\PYG{k}{public}\PYG{+w}{ }\PYG{k+kt}{int}\PYG{+w}{ }\PYG{n}{sequenceNumber}\PYG{p}{;}
+
+\PYG{+w}{    }\PYG{k}{public}\PYG{+w}{ }\PYG{k+kt}{string}\PYG{+w}{ }\PYG{n}{sourcePlayerId}\PYG{p}{;}
+\PYG{+w}{    }\PYG{k}{public}\PYG{+w}{ }\PYG{k+kt}{string}\PYG{+w}{ }\PYG{n}{sourceObjectId}\PYG{p}{;}
+\PYG{+w}{    }\PYG{k}{public}\PYG{+w}{ }\PYG{k+kt}{string}\PYG{+w}{ }\PYG{n}{targetObjectId}\PYG{p}{;}
+
+\PYG{+w}{    }\PYG{k}{public}\PYG{+w}{ }\PYG{n}{PuzzleEventType}\PYG{+w}{ }\PYG{n}{eventType}\PYG{p}{;}
+
+\PYG{+w}{    }\PYG{k}{public}\PYG{+w}{ }\PYG{n+nf}{PuzzleEvent}\PYG{p}{(}
+\PYG{+w}{        }\PYG{k+kt}{int}\PYG{+w}{ }\PYG{n}{eventId}\PYG{p}{,}
+\PYG{+w}{        }\PYG{k+kt}{int}\PYG{+w}{ }\PYG{n}{sequenceNumber}\PYG{p}{,}
+\PYG{+w}{        }\PYG{k+kt}{string}\PYG{+w}{ }\PYG{n}{sourcePlayerId}\PYG{p}{,}
+\PYG{+w}{        }\PYG{k+kt}{string}\PYG{+w}{ }\PYG{n}{sourceObjectId}\PYG{p}{,}
+\PYG{+w}{        }\PYG{k+kt}{string}\PYG{+w}{ }\PYG{n}{targetObjectId}\PYG{p}{,}
+\PYG{+w}{        }\PYG{n}{PuzzleEventType}\PYG{+w}{ }\PYG{n}{eventType}\PYG{p}{)}
+\PYG{+w}{    }\PYG{p}{\PYGZob{}}
+\PYG{+w}{        }\PYG{k}{this}\PYG{p}{.}\PYG{n}{eventId}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{eventId}\PYG{p}{;}
+\PYG{+w}{        }\PYG{k}{this}\PYG{p}{.}\PYG{n}{sequenceNumber}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{sequenceNumber}\PYG{p}{;}
+\PYG{+w}{        }\PYG{k}{this}\PYG{p}{.}\PYG{n}{sourcePlayerId}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{sourcePlayerId}\PYG{p}{;}
+\PYG{+w}{        }\PYG{k}{this}\PYG{p}{.}\PYG{n}{sourceObjectId}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{sourceObjectId}\PYG{p}{;}
+\PYG{+w}{        }\PYG{k}{this}\PYG{p}{.}\PYG{n}{targetObjectId}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{targetObjectId}\PYG{p}{;}
+\PYG{+w}{        }\PYG{k}{this}\PYG{p}{.}\PYG{n}{eventType}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{eventType}\PYG{p}{;}
+\PYG{+w}{    }\PYG{p}{\PYGZcb{}}
+\PYG{p}{\PYGZcb{}}
+\end{MintedVerbatim}
